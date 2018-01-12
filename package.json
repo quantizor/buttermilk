@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "babel-jest": "^22.0.6",
+    "babel-preset-env": "^1.6.1",
+    "jest": "^22.0.6"
+  }
+}
