@@ -32,6 +32,36 @@ it('handles dynamic fragments', () => {
     expect(regex.test('/foo/bar')).toBe(true);
 });
 
+it('extracts fragments properly', () => {
+    const test = '/:foo/:id';
+    const regex = regexify(test);
+    const result = '/foo/bar'.match(regex);
+
+    expect(result).toHaveLength(3);
+    expect(result).toEqual(
+        expect.arrayContaining([
+            '/foo/bar',
+            'foo',
+            'bar',
+        ])
+    );
+});
+
+it('extracts optional fragments properly', () => {
+    const test = '/:foo(/:id)';
+    const regex = regexify(test);
+    const result = '/foo/bar'.match(regex);
+
+    expect(result).toHaveLength(3);
+    expect(result).toEqual(
+        expect.arrayContaining([
+            '/foo/bar',
+            'foo',
+            'bar',
+        ])
+    );
+});
+
 it('handles query strings', () => {
     const test = '?foo=bar';
     const regex = regexify(test);

@@ -31,23 +31,3 @@ routes = [
     { test: valid(),                      render: () => {} },
     { test: regexify('/foo'),             redirect: '/bar' },
 ]
-
-function valid(validator, url) {
-    if (validator instanceof RegExp) {
-        return validator.test(url);
-    } else if (validator instanceof Function) {
-        return validator(url);
-    }
-}
-
-function route(url) {
-    match = routes.find(config => valid(config.test, url));
-
-    if (match.redirect) {
-        return route(match.redirect);
-    } else if (match) {
-        return await match.render();
-    } else {
-        // 404
-    }
-}

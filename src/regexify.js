@@ -1,7 +1,7 @@
-export default function regexify(test) {
+export default function regexify(path) {
     return new RegExp(
         '^' +
-        test
+        path
             // escape regex reserved characters
             .replace(/([/.?+])/g, '\\$1')
 
@@ -9,10 +9,10 @@ export default function regexify(test) {
             .replace(/\\[?]/, '.*?\\?.*?')
 
             // handle optional segments: (/bar)
-            .replace(/\(([^)]*)\)/g, '(?:$1)?')
+            .replace(/\(([^)]+)\)/g, '(?:$1)?')
 
             // handle dynamic fragments: /:bar
-            .replace(/\/:[^/)]*/g, '/([^/])*')
+            .replace(/\/:[^/()#?]*/g, '/([^/]*)')
         + '$'
     );
 }

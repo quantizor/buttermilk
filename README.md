@@ -4,11 +4,11 @@ unshitty routing for React
 
 ## goals
 
-- [ ] centrally-managed routing
+- [x] centrally-managed routing
 - [ ] obvious API
-- [ ] async routing made easy (build in something like loadable by default?)
+- [x] async routing made easy (build in something like loadable by default?)
 - [ ] SSR
-- [ ] HMR-friendly
+- [x] HMR-friendly
 - [ ] extensible (middlewares?)
     - ideally this would allow a redux integration if desired, the ability to perform transitions, etc
 - [ ] fast
