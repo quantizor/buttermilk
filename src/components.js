@@ -1,3 +1,4 @@
+import createContext from 'create-react-context';
 import hoist from 'hoist-non-react-statics';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -12,7 +13,7 @@ import {
     parseUrl,
 } from './utils';
 
-const CREAM = React.createContext('cream');
+const CREAM = createContext('cream');
 
 export class Router extends React.Component {
     static propTypes = {
@@ -98,7 +99,7 @@ export class Router extends React.Component {
 
     render() {
         return (
-            <CREAM.Provider value={this.this.getRoutingState()}>
+            <CREAM.Provider value={this.getRoutingState()}>
                 {this.renderChildren()}
             </CREAM.Provider>
         );
@@ -107,9 +108,11 @@ export class Router extends React.Component {
     renderChildren() {
         if (this.state.children === null) {
             return React.createElement(this.props.loadingComponent, this.getRoutingState());
+        } else if (!React.isValidElement(this.state.children)) {
+            return React.createElement(this.state.children, this.getRoutingState());
+        } else {
+            return this.state.children;
         }
-
-        return React.cloneElement(this.state.children, this.getRoutingState());
     }
 
     /**
@@ -120,7 +123,7 @@ export class Router extends React.Component {
 
         return {
             location: parseUrl(url),
-            params: getRouteParamsForURL(this.state.routes, url),
+            params: getRouteParamsForURL(this.state.activeRoute, url),
             route: this.state.activeRoute,
         };
     }
@@ -172,23 +175,13 @@ export class Router extends React.Component {
     }
 }
 
-export function withLocation(Component) {
-    class WithLocation extends React.Component {
-        static displayName = `WithLocation(${getDisplayName(Component)})`;
-        static WrappedComponent = Component;
-
-        render() {
-            return (
-                <CREAM.Consumer>
-                    {routingState => React.createElement(
-                        Component, Object.assign({}, this.props, routingState)
-                    )}
-                </CREAM.Consumer>
-            );
-        }
-    }
-
-    hoist(WithLocation, Component);
-
-    return WithLocation;
-}
+/**
+ * Compose it like this:
+ *
+ * <RoutingState>
+ *   {({ location, params, route }) => {
+ *      return <div>{location.pathname}</div>
+ *   }}
+ * </RoutingState>
+ */
+export const RoutingState = CREAM.Consumer;
