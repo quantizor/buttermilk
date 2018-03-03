@@ -1,7 +1,7 @@
 import * as utils from './utils';
 import regexify from './regexify';
 
-describe('valid(Function|RegExp, String)', () => {
+describe('valid(Function|RegExp, URLString)', () => {
     it('handles a given regex', () => {
         expect(utils.valid(/.*/, 'foo')).toBe(true);
         expect(utils.valid(/bar/, 'foo')).toBe(false);
@@ -13,7 +13,7 @@ describe('valid(Function|RegExp, String)', () => {
     });
 });
 
-describe('match(Object[], String)', () => {
+describe('findRoute(Object[], URLString)', () => {
     const routes = [
         { test: /foo/ },
         { test: /bar/ },
@@ -21,19 +21,19 @@ describe('match(Object[], String)', () => {
     ];
 
     it('returns the correct route', () => {
-        expect(utils.match(routes, '/foo')).toBe(routes[0]);
+        expect(utils.findRoute(routes, '/foo')).toBe(routes[0]);
     });
 
     it('returns nothing if a route is not found', () => {
-        expect(utils.match(routes, '/fizz')).toBeUndefined();
+        expect(utils.findRoute(routes, '/fizz')).toBeUndefined();
     });
 
     it('handles redirects if the matched route contains one', () => {
-        expect(utils.match(routes, '/baz')).toBe(routes[1]);
+        expect(utils.findRoute(routes, '/baz')).toBe(routes[1]);
     });
 });
 
-describe('extractParamsFromPath(String)', () => {
+describe('extractParamsFromPath(URLString)', () => {
     it('returns an array of params', () => {
         expect(utils.extractParamsFromPath('/:foo/:bar')).toEqual(
             expect.arrayContaining([
@@ -57,7 +57,7 @@ describe('extractParamsFromPath(String)', () => {
     });
 });
 
-describe('parseUrl(String)', () => {
+describe('parseUrl(URLString)', () => {
     expect(
         utils.parseUrl('https://evan:password@google.com:8080/yar?foo=bar&yah=nah#nah')
     ).toMatchObject({
@@ -79,7 +79,7 @@ describe('parseUrl(String)', () => {
     });
 });
 
-describe('getRouteParamsForURL(Object, String)', () => {
+describe('getRouteParamsForURL(Object, URLString)', () => {
     it('returns an empty object if the route has no params', () => {
         expect(utils.getRouteParamsForURL({ params: [] }, '/foo')).toEqual({});
     });

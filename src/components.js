@@ -5,7 +5,14 @@ import React from 'react';
 
 import { CHANNEL } from './constants';
 import regexify from './regexify';
-import { extractParamsFromPath, getDisplayName, getRouteParamsForURL, match, parseUrl } from './utils';
+
+import {
+    extractParamsFromPath,
+    findRoute,
+    getDisplayName,
+    getRouteParamsForURL,
+    parseUrl,
+} from './utils';
 
 export class Router extends React.Component {
     static childContextTypes = {
@@ -68,7 +75,7 @@ export class Router extends React.Component {
 
         const routes = this.processRoutes(props.routes);
         const url = props.url || this.getURL();
-        const initialRoute = match(routes, url);
+        const initialRoute = findRoute(routes, url);
 
         this.state = {
             activeRoute: initialRoute,
@@ -139,7 +146,7 @@ export class Router extends React.Component {
     }
 
     getStateUpdateForUrl(url, routes) {
-        const nextRoute = match(routes, url);
+        const nextRoute = findRoute(routes, url);
 
         return {
             activeRoute: route,

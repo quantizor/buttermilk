@@ -31,11 +31,11 @@ export function valid(validator, url) {
     }
 }
 
-export function match(routes, url) {
+export function findRoute(routes, url) {
     const route = routes.find(route => valid(route.test, url));
 
     if (route) {
-        if (route.redirect) return match(routes, route.redirect);
+        if (route.redirect) return findRoute(routes, route.redirect);
         else                return route;
     }
 }
