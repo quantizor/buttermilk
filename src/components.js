@@ -1,9 +1,7 @@
 import hoist from 'hoist-non-react-statics';
-import mitt from 'mitt';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { CHANNEL } from './constants';
 import regexify from './regexify';
 
 import {
@@ -14,11 +12,9 @@ import {
     parseUrl,
 } from './utils';
 
-export class Router extends React.Component {
-    static childContextTypes = {
-        [CHANNEL]: PropTypes.object,
-    };
+const CREAM = React.createContext('cream');
 
+export class Router extends React.Component {
     static propTypes = {
         /**
          * Provide a spinner or something to look at while the promise
@@ -63,7 +59,6 @@ export class Router extends React.Component {
         loadingComponent: 'div',
     };
 
-    emitter = mitt();
     promise = null;
 
     constructor(props, context) {
@@ -101,16 +96,15 @@ export class Router extends React.Component {
         }
     }
 
-    getChildContext(context) {
-        return Object.assign({}, context, {
-            [CHANNEL]: {
-                emitter: this.emitter,
-                getRoutingState: this.getRoutingState,
-            },
-        });
+    render() {
+        return (
+            <CREAM.Provider value={this.this.getRoutingState()}>
+                {this.renderChildren()}
+            </CREAM.Provider>
+        );
     }
 
-    render() {
+    renderChildren() {
         if (this.state.children === null) {
             return React.createElement(this.props.loadingComponent, this.getRoutingState());
         }
@@ -180,27 +174,16 @@ export class Router extends React.Component {
 
 export function withLocation(Component) {
     class WithLocation extends React.Component {
-        static contextTypes = {
-            [CHANNEL]: PropTypes.object,
-        };
-
         static displayName = `WithLocation(${getDisplayName(Component)})`;
         static WrappedComponent = Component;
 
-        componentWillMount() {
-            this.cacheRoutingState();
-            this.context[CHANNEL].emitter.on('*', this.cacheRoutingState);
-        }
-
-        componentWillUnmount() {
-            this.context[CHANNEL].emitter.off('*', this.cacheRoutingState);
-        }
-
-        cacheRoutingState = () => this.setState(this.context[CHANNEL].getRoutingState())
-
         render() {
-            return React.createElement(
-                Component, Object.assign({}, this.props, this.state)
+            return (
+                <CREAM.Consumer>
+                    {routingState => React.createElement(
+                        Component, Object.assign({}, this.props, routingState)
+                    )}
+                </CREAM.Consumer>
             );
         }
     }
