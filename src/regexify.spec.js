@@ -93,3 +93,35 @@ it('handles a complex route definition', () => {
     expect(regex.test('/foo/bar.html')).toBe(true);
     expect(regex.test('/foo/baz/bar.html')).toBe(true);
 });
+
+it('handles a naked wildcard', () => {
+    const test = '*';
+    const regex = regexify(test);
+
+    expect(regex.test('/foo/bar.html')).toBe(true);
+    expect(regex.test('/foo/baz/bar.html')).toBe(true);
+});
+
+it('handles an inline wildcard', () => {
+    const test = '/foo*';
+    const regex = regexify(test);
+
+    expect(regex.test('/foobar.html')).toBe(true);
+    expect(regex.test('/foo/bar.html')).toBe(true);
+});
+
+it('handles a splat', () => {
+    const test = '/foo/**/bar.html';
+    const regex = regexify(test);
+
+    expect(regex.test('/foo/blah/bar.html')).toBe(true);
+    expect(regex.test('/foo/bar.html')).toBe(true);
+});
+
+it('handles multple splats', () => {
+    const test = '/foo/**/bar/**/baz.html';
+    const regex = regexify(test);
+
+    expect(regex.test('/foo/blah/bar/fizz/baz.html')).toBe(true);
+    expect(regex.test('/foo/bar/baz.html')).toBe(true);
+});

@@ -7,7 +7,7 @@ unshitty routing for React
 - [x] centrally-managed routing
 - [ ] obvious API
 - [x] async routing made easy (build in something like loadable by default?)
-- [ ] SSR
+- [x] SSR
 - [x] HMR-friendly
 - [ ] extensible (middlewares?)
     - ideally this would allow a redux integration if desired, the ability to perform transitions, etc
@@ -31,6 +31,13 @@ unshitty routing for React
 
 - optional fragments
   /foo(/bar)
+
+- wildcard routing
+  *
+  /foo*
+
+- splat routing
+  /foo/**/bar.html
 
 - functional routing
   validate(url)
