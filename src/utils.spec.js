@@ -24,8 +24,8 @@ describe('findRoute(Object[], URLString)', () => {
         expect(utils.findRoute(routes, '/foo')).toBe(routes[0]);
     });
 
-    it('returns nothing if a route is not found', () => {
-        expect(utils.findRoute(routes, '/fizz')).toBeUndefined();
+    it('throws if a route is not found', () => {
+        expect(() => utils.findRoute(routes, '/fizz')).toThrowError();
     });
 
     it('handles redirects if the matched route contains one', () => {

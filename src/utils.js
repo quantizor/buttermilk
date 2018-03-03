@@ -38,6 +38,8 @@ export function findRoute(routes, url) {
         if (route.redirect) return findRoute(routes, route.redirect);
         else                return route;
     }
+
+    throw new Error(`could not find a route for url ${url}`);
 }
 
 export function getDisplayName(Component) {
