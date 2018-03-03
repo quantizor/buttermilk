@@ -16,46 +16,6 @@ import {
 const CREAM = createContext('cream');
 
 export class Router extends React.Component {
-    static propTypes = {
-        /**
-         * Provide a spinner or something to look at while the promise
-         * is in flight if using async routes.
-         */
-        loadingComponent: PropTypes.oneOfType([
-            PropTypes.func,
-            PropTypes.string,
-        ]),
-
-        routes: PropTypes.arrayOf(
-            PropTypes.shape({
-
-                /**
-                 * A RegExp, string, or function accepting the URL as
-                 * an argument and returning a boolean if valid.
-                 */
-                path: PropTypes.oneOfType([
-                    PropTypes.instanceOf(RegExp),
-                    PropTypes.string,
-                    PropTypes.func,
-                ]).isRequired,
-
-                /**
-                 * A function that returns JSX to be rendered, or a promise
-                 * that will be resolved with JSX. Only a single JSX child
-                 * is allowed.
-                 */
-                render: PropTypes.func.isRequired,
-            }),
-        ).isRequired,
-
-        /**
-         * The initial URL to be used for processing, falls back to
-         * window.location.href for non-SSR. Required for non-browser
-         * environments.
-         */
-        url: PropTypes.string,
-    };
-
     static defaultProps = {
         loadingComponent: 'div',
     };
@@ -181,6 +141,48 @@ export class Router extends React.Component {
             return promiseOrChildren;
         }
     }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+    Router.propTypes = {
+        /**
+         * Provide a spinner or something to look at while the promise
+         * is in flight if using async routes.
+         */
+        loadingComponent: PropTypes.oneOfType([
+            PropTypes.func,
+            PropTypes.string,
+        ]),
+
+        routes: PropTypes.arrayOf(
+            PropTypes.shape({
+
+                /**
+                 * A RegExp, string, or function accepting the URL as
+                 * an argument and returning a boolean if valid.
+                 */
+                path: PropTypes.oneOfType([
+                    PropTypes.instanceOf(RegExp),
+                    PropTypes.string,
+                    PropTypes.func,
+                ]).isRequired,
+
+                /**
+                 * A function that returns JSX to be rendered, or a promise
+                 * that will be resolved with JSX. Only a single JSX child
+                 * is allowed.
+                 */
+                render: PropTypes.func.isRequired,
+            }),
+        ).isRequired,
+
+        /**
+         * The initial URL to be used for processing, falls back to
+         * window.location.href for non-SSR. Required for non-browser
+         * environments.
+         */
+        url: PropTypes.string,
+    };
 }
 
 /**

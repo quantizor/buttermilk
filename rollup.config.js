@@ -1,15 +1,21 @@
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
+import resolve from 'rollup-plugin-node-resolve';
+import replace from 'rollup-plugin-replace';
 import sourceMaps from 'rollup-plugin-sourcemaps'
+import uglify from 'rollup-plugin-uglify';
 
 const plugins = [
-    babel({
-        externalHelpers: true,
-    }),
-    sourceMaps(),
+    resolve(),
+    babel(),
     commonjs({
         ignoreGlobal: true,
     }),
+    sourceMaps(),
+    replace({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    }),
+    uglify(),
 ]
 
 export default [
@@ -18,7 +24,7 @@ export default [
         output: {
             file: 'dist/cream.js',
             format: 'umd',
-            globals: { react: 'React' },
+            globals: { react: 'React', 'prop-types': 'PropTypes' },
             name: 'cream',
             sourcemap: true,
         },
