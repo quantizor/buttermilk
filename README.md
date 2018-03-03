@@ -16,9 +16,10 @@ unshitty routing for React
 
 ## todo
 
-- [ ] routing data model (trie?)
+- [x] routing data model (trie?)
 - [ ] action flow
-- [ ] react components
+- [x] react components
+- [ ] history & hash impl
 - [ ] extension architecture
 
 ## types of routing
