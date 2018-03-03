@@ -60,6 +60,7 @@ export class Router extends React.Component {
         loadingComponent: 'div',
     };
 
+    noFallbackWarningEmitted = false;
     promise = null;
 
     constructor(props, context) {
@@ -129,6 +130,13 @@ export class Router extends React.Component {
     }
 
     processRoutes(routes) {
+        if (process.env.NODE_ENV !== 'production') {
+            if (!this.noFallbackWarningEmitted && routes.every(route => route.path !== '*')) {
+                console.warn('no fallback route "*" was supplied. if a matching route is not found, the router will throw');
+                this.noFallbackWarning = true;
+            }
+        }
+
         return routes.map(
             route =>
                 Object.assign({}, route, {

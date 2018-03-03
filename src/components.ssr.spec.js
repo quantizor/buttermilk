@@ -8,6 +8,8 @@ import { Router, RoutingState } from './components';
 
 const render = props => ReactDOMServer.renderToString(<Router {...props} />);
 
+beforeEach(() => jest.spyOn(console, 'warn').mockImplementation(() => {}));
+
 describe('Router', () => {
     it('works', () => {
         const result = render({

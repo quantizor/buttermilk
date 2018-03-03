@@ -7,6 +7,7 @@ let root;
 const render = props => ReactDOM.render(<Router {...props} />, root);
 
 beforeAll(() => document.body.appendChild((root = document.createElement('main'))));
+beforeEach(() => jest.spyOn(console, 'warn').mockImplementation(() => {}));
 afterEach(() => ReactDOM.unmountComponentAtNode(root));
 
 describe('Router', () => {
@@ -45,6 +46,33 @@ describe('Router', () => {
                 query: {},
             },
         });
+    });
+
+    it('warns if no fallback route was provided', () => {
+        render({
+            routes: [{
+                path: '/foo',
+                render: () => <div>bar</div>,
+            }],
+            url: 'http://foo.com/foo',
+        });
+
+        expect(console.warn).toHaveBeenCalled();
+    });
+
+    it('does not warn if a fallback route was provided', () => {
+        render({
+            routes: [{
+                path: '/foo',
+                render: () => <div>bar</div>,
+            }, {
+                path: '*',
+                render: () => <div>oh well</div>,
+            }],
+            url: 'http://foo.com/foo',
+        });
+
+        expect(console.warn).not.toHaveBeenCalled();
     });
 });
 

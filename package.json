@@ -27,6 +27,9 @@
     "hoist-non-react-statics": "^2.3.1",
     "lite-url": "^1.0.4"
   },
+  "jest": {
+    "clearMocks": true
+  },
   "bundlesize": [
     {
       "path": "./dist/cream.js",
