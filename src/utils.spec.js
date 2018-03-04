@@ -14,11 +14,15 @@ describe('valid(Function|RegExp, URLString)', () => {
 });
 
 describe('findRoute(Object[], URLString)', () => {
-    const routes = [
-        { test: /foo/ },
-        { test: /bar/ },
-        { test: /baz/, redirect: '/bar' },
-    ];
+    let routes;
+
+    beforeEach(() => {
+        routes = [
+            { test: /foo/ },
+            { test: /bar/ },
+            { test: /baz/, redirect: '/bar' },
+        ];
+    });
 
     it('returns the correct route', () => {
         expect(utils.findRoute(routes, '/foo')).toBe(routes[0]);
@@ -30,6 +34,12 @@ describe('findRoute(Object[], URLString)', () => {
 
     it('handles redirects if the matched route contains one', () => {
         expect(utils.findRoute(routes, '/baz')).toBe(routes[1]);
+    });
+
+    it('returns the wildcard route if no other routes match', () => {
+        routes.push({ test: regexify('*') });
+
+        expect(utils.findRoute(routes, '/fizz')).toBe(routes[3]);
     });
 });
 

@@ -19,7 +19,7 @@ unshitty routing for React
 - [x] routing data model ~~(trie?)~~
 - [ ] action flow
 - [x] react components
-- [ ] history & hash impl
+- [x] history & hash impl
 - [ ] extension architecture
 
 ## types of routing

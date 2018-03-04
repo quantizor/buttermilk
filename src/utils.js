@@ -50,9 +50,11 @@ export function parseUrl(url) {
     const parsed = new LiteURL(url);
 
     parsed.query = parsed.search.slice(1).split('&').reduce((params, pair) => {
-        const idx = pair.indexOf('=');
+        if (pair) {
+            const idx = pair.indexOf('=');
 
-        params[pair.slice(0, idx)] = pair.slice(idx + 1);
+            params[pair.slice(0, idx)] = pair.slice(idx + 1);
+        }
 
         return params;
     }, {});

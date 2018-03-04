@@ -74,6 +74,46 @@ describe('Router', () => {
 
         expect(console.warn).not.toHaveBeenCalled();
     });
+
+    it('handles popstate events', () => {
+        const instance = render({
+            routes: [{
+                path: '/foo',
+                render: () => <div>bar</div>,
+            }, {
+                path: '*',
+                render: () => <div>oh well</div>,
+            }],
+            url: 'http://foo.com/foo',
+        });
+
+        expect(root.innerHTML).toContain('bar');
+
+        jest.spyOn(instance, 'getURL').mockImplementation(() => 'http://foo.com/bar');
+        window.dispatchEvent(new Event('popstate'));
+
+        expect(root.innerHTML).toContain('oh well');
+    });
+
+    it('handles hashchange events', () => {
+        const instance = render({
+            routes: [{
+                path: '#foo',
+                render: () => <div>bar</div>,
+            }, {
+                path: '*',
+                render: () => <div>oh well</div>,
+            }],
+            url: 'http://foo.com/#foo',
+        });
+
+        expect(root.innerHTML).toContain('bar');
+
+        jest.spyOn(instance, 'getURL').mockImplementation(() => 'http://foo.com/');
+        window.dispatchEvent(new Event('hashchange'));
+
+        expect(root.innerHTML).toContain('oh well');
+    });
 });
 
 describe('RoutingState', () => {
@@ -106,6 +146,53 @@ describe('RoutingState', () => {
                 params: {},
                 pathname: '/foo',
                 query: {},
+            },
+        });
+    });
+
+    it('reflects updates in routing state', () => {
+        class Foo extends React.Component {
+            render() {
+                return (
+                    <div id="inner">
+                        <RoutingState>
+                            {state => {
+                                return JSON.stringify(state);
+                            }}
+                        </RoutingState>
+                    </div>
+                );
+            }
+        }
+
+        const instance = render({
+            routes: [{
+                path: '/foo(/:id)',
+                render: () => Foo,
+            }],
+            url: 'http://foo.com/foo',
+        });
+
+        expect(JSON.parse(root.querySelector('#inner').innerHTML)).toMatchObject({
+            location: {
+                href: 'http://foo.com/foo',
+                params: {},
+                pathname: '/foo',
+                query: {},
+            },
+        });
+
+        jest.spyOn(instance, 'getURL').mockImplementation(() => 'http://foo.com/foo/bar');
+        window.dispatchEvent(new Event('popstate'));
+
+        expect(JSON.parse(root.querySelector('#inner').innerHTML)).toMatchObject({
+            location: {
+                href: 'http://foo.com/foo/bar',
+                pathname: '/foo/bar',
+                query: {},
+            },
+            params: {
+                id: 'bar',
             },
         });
     });

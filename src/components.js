@@ -44,18 +44,20 @@ export class Router extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.routes !== this.props.routes) {
-            this.setState(
-                this.getStateUpdateForUrl(
-                    nextProps.url, this.processRoutes(nextProps.routes)
-                )
-            );
+            this.recomputeRoutingState(nextProps.url, nextProps.routes);
         } else if (nextProps.url !== this.state.url) {
-            this.setState(
-                this.getStateUpdateForUrl(
-                    nextProps.url, this.props.routes
-                )
-            );
+            this.recomputeRoutingState(nextProps.url, this.state.routes);
         }
+    }
+
+    componentDidMount() {
+        window.addEventListener('popstate', this.handleLocationChange);
+        window.addEventListener('hashchange', this.handleLocationChange);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('popstate', this.handleLocationChange);
+        window.removeEventListener('hashchange', this.handleLocationChange);
     }
 
     render() {
@@ -74,6 +76,22 @@ export class Router extends React.Component {
         } else {
             return this.state.children;
         }
+    }
+
+    getURL() {
+        return window.location.href;
+    }
+
+    handleLocationChange = (/* event */) => {
+        this.recomputeRoutingState(this.getURL(), this.state.routes);
+    }
+
+    recomputeRoutingState = (url, routes) => {
+        this.setState(
+            this.getStateUpdateForUrl(
+                url, routes === this.state.routes ? routes : this.processRoutes(routes)
+            )
+        );
     }
 
     /**
@@ -106,16 +124,12 @@ export class Router extends React.Component {
         );
     }
 
-    getURL() {
-        return window.location.href;
-    }
-
     getStateUpdateForUrl(url, routes) {
         const nextRoute = findRoute(routes, url);
 
         return {
-            activeRoute: route,
-            children: this.processChildren(route.render()),
+            activeRoute: nextRoute,
+            children: this.processChildren(nextRoute.render()),
             routes,
             url,
         };
