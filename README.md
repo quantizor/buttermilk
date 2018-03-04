@@ -16,7 +16,7 @@ unshitty routing for React
 
 ## todo
 
-- [x] routing data model (trie?)
+- [x] routing data model ~~(trie?)~~
 - [ ] action flow
 - [x] react components
 - [ ] history & hash impl
@@ -25,29 +25,47 @@ unshitty routing for React
 ## types of routing
 
 - static
+  ```
   /foo
+  ```
 
 - dynamic fragments
+  ```
   /foo/:id
+  ```
 
 - optional fragments
+  ```
   /foo(/bar)
+  ```
 
 - wildcard routing
+  ```
   *
   /foo*
+  ```
 
 - splat routing
+  ```
   /foo/**/bar.html
+  ```
 
 - functional routing
+  ```
   validate(url)
+  ```
 
 - regex routing
+  ```
   ^(?=bar)/foo
+  ```
 
 - query string routing
+  ```
   ?foo=bar
+  ```
 
 - redirect
+  ```
   /foo -> /bar
+  ```
