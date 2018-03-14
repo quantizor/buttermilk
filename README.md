@@ -5,7 +5,7 @@ unshitty routing for React
 ## goals
 
 - [x] centrally-managed routing
-- [ ] obvious API
+- [x] obvious API
 - [x] async routing made easy (build in something like loadable by default?)
 - [x] SSR
 - [x] HMR-friendly

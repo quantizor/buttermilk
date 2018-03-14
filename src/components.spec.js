@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Simulate } from 'react-dom/test-utils';
 
-import { Router, RoutingState } from './components';
+import { Link, Router, RoutingState } from './components';
 
 let root;
 const render = props => ReactDOM.render(<Router {...props} />, root);
@@ -195,5 +196,158 @@ describe('RoutingState', () => {
                 id: 'bar',
             },
         });
+    });
+});
+
+describe('Link', () => {
+    beforeEach(() => {
+        jest.spyOn(history, 'pushState').mockImplementation(() => {});
+        jest.spyOn(window, 'open').mockImplementation(() => {});
+    });
+
+    it('renders as an anchor tag by default', () => {
+        render({
+            routes: [{
+                path: '/foo',
+                render: () => <Link href="/bar">Baz</Link>,
+            }],
+            url: 'http://foo.com/foo',
+        });
+
+        expect(root.innerHTML).toMatchSnapshot();
+    });
+
+    it('renders as a different component if provided', () => {
+        render({
+            routes: [{
+                path: '/foo',
+                render: () => <Link as="div" href="/bar">Baz</Link>,
+            }],
+            url: 'http://foo.com/foo',
+        });
+
+        expect(root.innerHTML).toMatchSnapshot();
+    });
+
+    it('sets [data-active] if the link href matches the active route', () => {
+        render({
+            routes: [{
+                path: '/foo',
+                render: () => <Link href="/foo">Baz</Link>,
+            }],
+            url: 'http://foo.com/foo',
+        });
+
+        expect(root.innerHTML).toMatchSnapshot();
+    });
+
+    it('changes the routing state on click', () => {
+        render({
+            routes: [{
+                path: '/foo',
+                render: () => <Link href="/bar">Baz</Link>,
+            }, {
+                path: '/bar',
+                render: () => 'It worked.',
+            }],
+            url: 'http://foo.com/foo',
+        });
+
+        Simulate.click(root.querySelector('a'));
+
+        expect(history.pushState).toHaveBeenCalledWith({}, '', '/bar');
+    });
+
+    it('changes the routing state on touch end', () => {
+        render({
+            routes: [{
+                path: '/foo',
+                render: () => <Link href="/bar">Baz</Link>,
+            }, {
+                path: '/bar',
+                render: () => 'It worked.',
+            }],
+            url: 'http://foo.com/foo',
+        });
+
+        Simulate.touchEnd(root.querySelector('a'));
+
+        expect(history.pushState).toHaveBeenCalledWith({}, '', '/bar');
+    });
+
+    it('changes the routing state on enter press', () => {
+        render({
+            routes: [{
+                path: '/foo',
+                render: () => <Link href="/bar">Baz</Link>,
+            }, {
+                path: '/bar',
+                render: () => 'It worked.',
+            }],
+            url: 'http://foo.com/foo',
+        });
+
+        Simulate.keyDown(root.querySelector('a'), {
+            key: 'Enter',
+        });
+
+        expect(history.pushState).toHaveBeenCalledWith({}, '', '/bar');
+    });
+
+    it('changes the routing state on space press', () => {
+        render({
+            routes: [{
+                path: '/foo',
+                render: () => <Link href="/bar">Baz</Link>,
+            }, {
+                path: '/bar',
+                render: () => 'It worked.',
+            }],
+            url: 'http://foo.com/foo',
+        });
+
+        Simulate.keyDown(root.querySelector('a'), {
+            key: 'Space',
+        });
+
+        expect(history.pushState).toHaveBeenCalledWith({}, '', '/bar');
+    });
+
+    it('opens a new tab if metaKey is pressed while clicking the link', () => {
+        render({
+            routes: [{
+                path: '/foo',
+                render: () => <Link href="/bar">Baz</Link>,
+            }, {
+                path: '/bar',
+                render: () => 'It worked.',
+            }],
+            url: 'http://foo.com/foo',
+        });
+
+        Simulate.click(root.querySelector('a'), {
+            metaKey: true,
+        });
+
+        expect(window.open).toHaveBeenCalledWith('/bar');
+        expect(history.pushState).not.toHaveBeenCalled();
+    });
+
+    it('opens a new tab if target is set to _blank', () => {
+        render({
+            routes: [{
+                path: '/foo',
+                render: () => <Link href="/bar" target="_blank">Baz</Link>,
+            }, {
+                path: '/bar',
+                render: () => 'It worked.',
+            }],
+            url: 'http://foo.com/foo',
+        });
+
+        Simulate.click(root.querySelector('a'));
+
+        expect(window.open).toHaveBeenCalledWith('/bar');
+        expect(history.pushState).not.toHaveBeenCalled();
     });
 });

@@ -17,18 +17,17 @@
     "jest": "^22.0.6",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "rollup": "^0.56.3",
+    "rollup": "^0.56.5",
     "rollup-plugin-babel": "^3.0.3",
-    "rollup-plugin-commonjs": "^8.3.0",
-    "rollup-plugin-node-resolve": "^3.0.3",
+    "rollup-plugin-commonjs": "^9.1.0",
+    "rollup-plugin-node-resolve": "^3.2.0",
     "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-uglify": "^3.0.0"
   },
   "dependencies": {
     "create-react-context": "^0.2.1",
-    "hoist-non-react-statics": "^2.3.1",
-    "lite-url": "^1.0.4"
+    "lite-url": "^1.0.5"
   },
   "jest": {
     "clearMocks": true
