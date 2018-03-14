@@ -4,15 +4,14 @@ beautifully simple routing
 
 ## goals
 
-- [x] centrally-managed routing
-- [x] obvious API
-- [x] async routing made easy (build in something like loadable by default?)
-- [x] SSR
-- [x] HMR-friendly
-- [ ] extensible (middlewares?)
-    - ideally this would allow a redux integration if desired, the ability to perform transitions, etc
-- [ ] fast
-- [ ] make it as small as possible
+- async routing made easy (build in something like loadable by default?)
+- centrally-managed routing
+- extensible (middlewares?) _ideally this would allow a redux integration if desired, the ability to perform transitions, etc_
+- fast
+- HMR-friendly
+- make it as small as possible
+- obvious API
+- SSR
 
 ## todo
 
