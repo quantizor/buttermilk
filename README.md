@@ -1,6 +1,6 @@
-# cream
+# buttermilk
 
-unshitty routing for React
+beautifully simple routing
 
 ## goals
 

@@ -13,7 +13,7 @@ import {
     valid,
 } from './utils';
 
-const CONTEXT = createContext('cream');
+const CONTEXT = createContext('buttermilk');
 
 export class Router extends React.Component {
     static propTypes = {

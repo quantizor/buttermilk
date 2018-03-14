@@ -22,10 +22,10 @@ export default [
     {
         input: 'src/index.js',
         output: {
-            file: 'dist/cream.js',
+            file: 'dist/umd.js',
             format: 'umd',
             globals: { react: 'React', 'prop-types': 'PropTypes' },
-            name: 'cream',
+            name: 'buttermilk',
             sourcemap: true,
         },
         external: ['react', 'prop-types'],
