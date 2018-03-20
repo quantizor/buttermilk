@@ -61,3 +61,19 @@ export function parseUrl(url) {
 
     return parsed;
 }
+
+// TODO: tests
+export function pushState(...args) {
+    history.pushState(...args);
+
+    // this is what triggers the routing to update
+    window.dispatchEvent(new Event('popstate'));
+}
+
+// TODO: tests
+export function replaceState(...args) {
+    history.replaceState(...args);
+
+    // this is what triggers the routing to update
+    window.dispatchEvent(new Event('popstate'));
+}

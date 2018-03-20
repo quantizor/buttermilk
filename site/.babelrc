@@ -1,0 +1,13 @@
+{
+    "plugins": [
+        "styled-components",
+        "syntax-dynamic-import",
+        "transform-class-properties"
+    ],
+    "presets": [
+        ["env", {
+            "modules": false
+        }],
+        "react"
+    ]
+}

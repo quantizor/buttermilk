@@ -10,6 +10,7 @@ import {
     getDisplayName,
     getRouteParamsForURL,
     parseUrl,
+    pushState,
     valid,
 } from './utils';
 
@@ -22,6 +23,15 @@ export class Router extends React.Component {
          * is in flight if using async routes.
          */
         loadingComponent: PropTypes.oneOfType([
+            PropTypes.func,
+            PropTypes.string,
+        ]),
+
+        /**
+         * An optional app runtime component. Think of it like the "shell" of your
+         * app, so perhaps the outer container, nav bar, etc.
+         */
+        outerComponent: PropTypes.oneOfType([
             PropTypes.func,
             PropTypes.string,
         ]),
@@ -58,6 +68,8 @@ export class Router extends React.Component {
 
     static defaultProps = {
         loadingComponent: 'div',
+        outerComponent: 'div',
+        url: typeof window !== 'undefined' ? window.location.href : '',
     };
 
     noFallbackWarningEmitted = false;
@@ -101,18 +113,22 @@ export class Router extends React.Component {
     }
 
     render() {
+        const routingState = this.getRoutingState();
+
         return (
-            <CONTEXT.Provider value={this.getRoutingState()}>
-                {this.renderChildren()}
+            <CONTEXT.Provider value={routingState}>
+                <this.props.outerComponent {...routingState}>
+                    {this.renderChildren(routingState)}
+                </this.props.outerComponent>
             </CONTEXT.Provider>
         );
     }
 
-    renderChildren() {
+    renderChildren(routingState) {
         if (this.state.children === null) {
-            return React.createElement(this.props.loadingComponent, this.getRoutingState());
+            return React.createElement(this.props.loadingComponent, routingState);
         } else if (!React.isValidElement(this.state.children)) {
-            return React.createElement(this.state.children, this.getRoutingState());
+            return React.createElement(this.state.children, routingState);
         } else {
             return this.state.children;
         }
@@ -178,17 +194,17 @@ export class Router extends React.Component {
     processChildren(promiseOrChildren) {
         if (promiseOrChildren instanceof Promise) {
             const instance = this;
-            promise = promiseOrChildren;
+            instance.promise = promiseOrChildren;
             promiseOrChildren.then(function handlePromiseResolution(result) {
                 /**
                  * is this promise still valid? if not, ignore the
                  * resolution
                  */
-                if (promise === this) {
+                if (instance.promise === this) {
                     instance.setState({ children: result });
-                    promise = null;
+                    this.promise = null;
                 }
-            });
+            }.bind(promiseOrChildren));
 
             return null;
         } else {
@@ -270,7 +286,7 @@ export class Link extends React.PureComponent {
         return this.props.as !== Link.defaultProps.as;
     }
 
-    handleNavigationIntent = async e => {
+    handleNavigationIntent = e => {
         if (e.type !== 'keydown' || (e.type === 'keydown' && (e.key === 'Enter' || e.key === 'Space'))) {
             e.preventDefault();
             e.stopPropagation();
@@ -278,7 +294,7 @@ export class Link extends React.PureComponent {
             if (e.metaKey || e.target.getAttribute('target') === '_blank') {
                 window.open(this.props.href);
             } else {
-                history.pushState({}, '', this.props.href);
+                pushState({}, '', this.props.href);
             }
         }
     };

@@ -30,5 +30,14 @@ export default [
         },
         external: ['react', 'prop-types'],
         plugins,
+    }, {
+        input: 'src/index.js',
+        output: {
+            file: 'dist/es.js',
+            format: 'es',
+            sourcemap: true,
+        },
+        external: ['react', 'prop-types'],
+        plugins,
     },
 ];
