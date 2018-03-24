@@ -36,7 +36,7 @@ export function findRoute(routes, url) {
 
     if (route) {
         if (route.redirect) return findRoute(routes, route.redirect);
-        else                return route;
+        else                return { route, url };
     }
 
     throw new Error(`could not find a route for url ${url}`);
@@ -62,17 +62,18 @@ export function parseUrl(url) {
     return parsed;
 }
 
+/**
+ * A client-side method for programmatically updating the routing state.
+ *
+ * Accepts a new url (absolute or relative) and an optional second boolean
+ * parameter controlling if a new browser history entry should be created.
+ *
+ * If you want to change the routing state on server, just pass a new url to
+ * the <Router> component.
+ */
 // TODO: tests
-export function pushState(...args) {
-    history.pushState(...args);
-
-    // this is what triggers the routing to update
-    window.dispatchEvent(new Event('popstate'));
-}
-
-// TODO: tests
-export function replaceState(...args) {
-    history.replaceState(...args);
+export function route(url, addNewHistoryEntry = true) {
+    history[addNewHistoryEntry ? 'pushState' : 'replaceState']({}, '', url);
 
     // this is what triggers the routing to update
     window.dispatchEvent(new Event('popstate'));

@@ -5,7 +5,10 @@ import { Simulate } from 'react-dom/test-utils';
 import { Link, Router, RoutingState } from './components';
 
 let root;
-const render = props => ReactDOM.render(<Router {...props} />, root);
+const render = ({ url, ...props }) => {
+    jest.spyOn(Router, 'getURL').mockImplementation(() => url);
+    ReactDOM.render(<Router {...props} />, root)
+};
 
 beforeAll(() => document.body.appendChild((root = document.createElement('main'))));
 beforeEach(() => jest.spyOn(console, 'warn').mockImplementation(() => {}));
@@ -39,7 +42,7 @@ describe('Router', () => {
             url: 'http://foo.com/foo',
         });
 
-        expect(JSON.parse(root.innerHTML)).toMatchObject({
+        expect(JSON.parse(root.children[0].innerHTML)).toMatchObject({
             location: {
                 href: 'http://foo.com/foo',
                 params: {},
@@ -90,7 +93,7 @@ describe('Router', () => {
 
         expect(root.innerHTML).toContain('bar');
 
-        jest.spyOn(instance, 'getURL').mockImplementation(() => 'http://foo.com/bar');
+        Router.getURL.mockImplementation(() => 'http://foo.com/bar');
         window.dispatchEvent(new Event('popstate'));
 
         expect(root.innerHTML).toContain('oh well');
@@ -110,7 +113,7 @@ describe('Router', () => {
 
         expect(root.innerHTML).toContain('bar');
 
-        jest.spyOn(instance, 'getURL').mockImplementation(() => 'http://foo.com/');
+        Router.getURL.mockImplementation(() => 'http://foo.com/');
         window.dispatchEvent(new Event('hashchange'));
 
         expect(root.innerHTML).toContain('oh well');
@@ -183,7 +186,7 @@ describe('RoutingState', () => {
             },
         });
 
-        jest.spyOn(instance, 'getURL').mockImplementation(() => 'http://foo.com/foo/bar');
+        Router.getURL.mockImplementation(() => 'http://foo.com/foo/bar');
         window.dispatchEvent(new Event('popstate'));
 
         expect(JSON.parse(root.querySelector('#inner').innerHTML)).toMatchObject({

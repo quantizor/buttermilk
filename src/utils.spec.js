@@ -25,7 +25,7 @@ describe('findRoute(Object[], URLString)', () => {
     });
 
     it('returns the correct route', () => {
-        expect(utils.findRoute(routes, '/foo')).toBe(routes[0]);
+        expect(utils.findRoute(routes, '/foo')).toEqual({ route: routes[0], url: '/foo' });
     });
 
     it('throws if a route is not found', () => {
@@ -33,13 +33,13 @@ describe('findRoute(Object[], URLString)', () => {
     });
 
     it('handles redirects if the matched route contains one', () => {
-        expect(utils.findRoute(routes, '/baz')).toBe(routes[1]);
+        expect(utils.findRoute(routes, '/baz')).toEqual({ route: routes[1], url: '/bar' });
     });
 
     it('returns the wildcard route if no other routes match', () => {
         routes.push({ test: regexify('*') });
 
-        expect(utils.findRoute(routes, '/fizz')).toBe(routes[3]);
+        expect(utils.findRoute(routes, '/fizz')).toEqual({ route: routes[3], url: '/fizz' });
     });
 });
 

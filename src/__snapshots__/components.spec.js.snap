@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Link renders as a different component if provided 1`] = `"<div role=\\"link\\">Baz</div>"`;
+exports[`Link renders as a different component if provided 1`] = `"<div location=\\"[object Object]\\" params=\\"[object Object]\\" route=\\"[object Object]\\"><div role=\\"link\\">Baz</div></div>"`;
 
-exports[`Link renders as an anchor tag by default 1`] = `"<a href=\\"/bar\\">Baz</a>"`;
+exports[`Link renders as an anchor tag by default 1`] = `"<div location=\\"[object Object]\\" params=\\"[object Object]\\" route=\\"[object Object]\\"><a href=\\"/bar\\">Baz</a></div>"`;
 
-exports[`Link sets [data-active] if the link href matches the active route 1`] = `"<a href=\\"/foo\\" data-active=\\"\\">Baz</a>"`;
+exports[`Link sets [data-active] if the link href matches the active route 1`] = `"<div location=\\"[object Object]\\" params=\\"[object Object]\\" route=\\"[object Object]\\"><a href=\\"/foo\\" data-active=\\"\\">Baz</a></div>"`;
