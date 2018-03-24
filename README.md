@@ -1,7 +1,5 @@
 # buttermilk
 
-beautifully simple routing
-
 <!-- TOC -->
 
 - [buttermilk](#buttermilk)
@@ -41,51 +39,17 @@ A route should look like this:
 
 Buttermilk has a highly flexible matching system, offering the following flavors of routing:
 
-- static
-  ```
-  /foo
-  ```
-
-- dynamic fragments
-  ```
-  /foo/:id
-  ```
-
-- optional fragments
-  ```
-  /foo(/bar)
-  ```
-
-- wildcard routing
-  ```
-  *
-  /foo*
-  ```
-
-- splat routing
-  ```
-  /foo/**/bar.html
-  ```
-
-- functional routing
-  ```
-  validate(url)
-  ```
-
-- regex routing
-  ```
-  ^(?=bar)/foo
-  ```
-
-- query string routing
-  ```
-  ?foo=bar
-  ```
-
-- redirect
-  ```
-  /foo -> /bar
-  ```
+flavor | syntax
+---    | ---
+static | `/foo`
+dynamic fragments | `/foo/:id`
+optional fragments | `/foo(/bar)`
+wildcard | `/foo*`
+fallback | `*`
+splat | `/foo/**/bar.html`
+functional | `yourValidationFunction(url)`
+regex | `^(?=bar)/foo`
+query string | `?foo=bar`
 
 The only rule is there must be a fallback route at the end of the routing chain (`path: '*'`.) Otherwise, you are free to compose routes as it makes sense for your app.
 
@@ -304,9 +268,9 @@ const routes = [{
 
 ## goals
 
-- async as a first-class citizen
 - centrally-managed routing
 - fast
+- first-class async support
 - HMR-friendly
 - obvious API
 - small
