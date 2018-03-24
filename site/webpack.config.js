@@ -6,10 +6,11 @@ const path = require('path');
 const PROD = process.env.NODE_ENV === 'production';
 
 module.exports = {
-    devtool: PROD ? 'none' : 'source-map',
+    devtool: PROD ? 'none' : 'cheap-module-eval-source-map',
     mode: PROD ? 'production' : 'development',
     module: {
         rules: [{
+            exclude: /node_modules/,
             test: /\.js$/,
             use: 'babel-loader',
         }]
@@ -24,14 +25,3 @@ module.exports = {
         })
     ],
 }
-
-module.exports.serve = {
-  content: [__dirname],
-  add: (app, middleware, options) => {
-    const historyOptions = {
-      // ... see: https://github.com/bripkens/connect-history-api-fallback#options
-    };
-
-    app.use(convert(history(historyOptions)));
-  }
-};

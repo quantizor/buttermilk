@@ -1,16 +1,7 @@
 {
     "plugins": ["transform-class-properties"],
     "presets": [
-        ["env", { "modules": false }],
+        "env",
         "react"
-    ],
-    "env": {
-        "production": {
-            "plugins": ["external-helpers"]
-        },
-        "test": {
-            "plugins": ["transform-class-properties"],
-            "presets": ["env"]
-        }
-    }
+    ]
 }
