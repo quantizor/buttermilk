@@ -57,6 +57,10 @@ The only rule is there must be a fallback route at the end of the routing chain 
 
 #### `<Router>`
 
+The gist of Buttermilk's router is that it acts like a controlled component when used server-side (driven by `props.url`) and an uncontrolled one client-side (driven by the value of `window.location.href` and intercepted navigation events.)
+
+In the browser, use either a `<Link>` component or the `route()` utility method to change routes. The router will also automatically pick up popstate events caused by user-driven browser navigation (forward, back buttons, etc.)
+
 ```js
 /**
  * Provide a spinner or something to look at while the promise
