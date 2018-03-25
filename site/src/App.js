@@ -5,6 +5,12 @@ import styled from 'styled-components';
 import { Link, Router } from '../../src';
 import Home from './Home';
 
+const VERSION = preval`
+  const pkg = require('../../package.json');
+
+  module.exports = pkg.version;
+`;
+
 class App extends Component {
   render() {
     return (
@@ -12,6 +18,9 @@ class App extends Component {
         <Header>
           <Headline>
             Buttermilk
+            <Version href="https://github.com/probablyup/buttermilk/releases" target="_blank">
+              {VERSION.slice(0, VERSION.lastIndexOf('.'))}
+            </Version>
           </Headline>
         </Header>
 
@@ -47,6 +56,7 @@ const Headline = styled.h1`
   font-family: 'Vibur', sans-serif;
   font-size: 5rem;
   margin: 0;
+  position: relative;
   transform: rotate(-6deg);
   transform-origin: center;
 
@@ -59,6 +69,14 @@ const Headline = styled.h1`
       text-shadow: 0 0 300px;
     }
   }
+`;
+
+const Version = styled.a`
+  font-size: 0.25em;
+  position: absolute;
+  right: -1em;
+  bottom: -0.5em;
+  text-decoration: none;
 `;
 
 const Content = styled.main`

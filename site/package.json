@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "babel-plugin-preval": "^1.6.4",
     "babel-plugin-styled-components": "^1.5.1",
     "css-loader": "^0.28.11",
     "markdown-to-jsx": "^6.5.2",

@@ -19,11 +19,16 @@
 
 ## installation
 
+Grab the `buttermilk` package with your favorite package manager.
+
 ```
+npm i buttermilk
 yarn add buttermilk
 ```
 
 ## usage
+
+Setting up `buttermilk` involves placing a `<Router>` component on your page and feeding it an array of route definitions. If you learn better by reverse engineering, check out the [holistic example](#holistic-example).
 
 ### configuration
 
@@ -51,7 +56,7 @@ functional | `yourValidationFunction(url)`
 regex | `^(?=bar)/foo`
 query string | `?foo=bar`
 
-The only rule is there must be a fallback route at the end of the routing chain (`path: '*'`.) Otherwise, you are free to compose routes as it makes sense for your app.
+The only rule is there must be a fallback route at the end of the routing chain: `path: '*'`. Otherwise, you are free to compose routes as it makes sense for your app.
 
 ### components
 
