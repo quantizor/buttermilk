@@ -1,0 +1,6 @@
+language: node_js
+version: 8
+cache: yarn
+script:
+  - yarn test --coverage --coverage-directory coverage
+  - codecov

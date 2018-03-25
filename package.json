@@ -26,6 +26,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "bundlesize": "^0.16.0",
+    "codecov": "^3.0.0",
     "jest": "^22.0.6",
     "lodash": "^4.17.5",
     "react": "^16.2.0",
