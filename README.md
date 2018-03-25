@@ -213,8 +213,17 @@ route('/some/other/url');
 
 ### holistic example
 
+See it live: <https://codesandbox.io/s/20q311nn6n>
+
 ```jsx
-import { Router, RoutingState, Link } from 'buttermilk';
+/* Home.js */
+export default () => "Home";
+
+/* index.js */
+import React from "react";
+import ReactDOM from "react-dom";
+
+import { Router, RoutingState, Link } from "./buttermilk";
 
 const App = props => (
   <div>
@@ -224,8 +233,8 @@ const App = props => (
 
     <nav>
       <Link href="/">Home</Link>
-      <Link href="/blep/kitter" target="_blank">Kitter Blep!</Link>
-      <Link href="/blep/corg" target="_blank">Corg Blep!</Link>
+      <Link href="/blep/kitter">Kitter Blep!</Link>
+      <Link href="/blep/corg">Corg Blep!</Link>
     </nav>
 
     <main>{props.children}</main>
@@ -236,38 +245,47 @@ const NotFound = () => (
   <div>
     <h2>Oh noes, a 404 page!</h2>
     <RoutingState>
-      {({ location: { pathname } }) => (
-        <p>No page was found with the path: <code>{pathname}</code></p>
+      {routing => (
+        <p>
+          No page was found with the path:&nbsp;
+          <code>{routing.location.pathname}</code>
+        </p>
       )}
     </RoutingState>
 
-    <p><Link href="/">Let's go back home.</Link></p>
+    <p>
+      <Link href="/">Let's go back home.</Link>
+    </p>
   </div>
 );
 
-const routes = [{
-  path: '/',
-  render: () => import('./Home').default,
-}, {
-  path: '/blep/:animal',
-  render: (({ params: { animal } })) => (
-    <img
-      src={
-        animal === 'corg'
-          ? 'http://static.damnlol.com/media/bc42fc943ada24176298871de477e0c6.jpg'
-          : 'https://i.imgur.com/OvbGwwI.jpg'
-      }
-    />
-  ),
-}, {
-  path: '*',
-  render: () => NotFound,
-}];
+const routes = [
+  {
+    path: "/",
+    render: () => import("./Home").then(mdl => mdl.default),
+  },
+  {
+    path: "/blep/:animal",
+    render: routing => (
+      <img
+        alt="Bleppin'"
+        src={
+          routing.params.animal === "corg"
+            ? "http://static.damnlol.com/media/bc42fc943ada24176298871de477e0c6.jpg"
+            : "https://i.imgur.com/OvbGwwI.jpg"
+        }
+      />
+    ),
+  },
+  {
+    path: "*",
+    render: () => NotFound,
+  },
+];
 
-<Router
-  routes={routes}
-  outerComponent={App}
-/>
+const root = document.body.appendChild(document.createElement("div"));
+
+ReactDOM.render(<Router routes={routes} outerComponent={App} />, root);
 ```
 
 ## goals

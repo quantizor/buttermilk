@@ -59,4 +59,7 @@ typings/
 .env
 
 # built assets
+site/public/vendor
+site/public/bundle.js
+site/public/index.html
 dist
