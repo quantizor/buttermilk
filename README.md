@@ -241,7 +241,7 @@ export default () => "Home";
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { Router, RoutingState, Link } from "./buttermilk";
+import { Router, RoutingState, Link } from "buttermilk";
 
 const App = props => (
   <div>
