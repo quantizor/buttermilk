@@ -85,8 +85,10 @@ injectGlobal`
   }
 
   pre, code {
+    animation: none !important;
     background: ${rgba(red, 0.05)};
     font-family: 'Overpass Mono', monospace;
+    opacity: 1 !important;
   }
 
   code {

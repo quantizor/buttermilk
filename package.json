@@ -5,6 +5,7 @@
     "type": "git",
     "url": "https://github.com/probablyup/buttermilk"
   },
+  "homepage": "https://buttermilk.js.org/",
   "author": {
     "name": "Evan Scott",
     "email": "probablyup@gmail.com",
