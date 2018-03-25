@@ -11,7 +11,7 @@
             - [`<RoutingState>`](#routingstate)
             - [`<Link>`](#link)
         - [utilities](#utilities)
-            - [`route(url: String, addNewHistoryEntry: Boolean = true)`](#routeurl-string-addnewhistoryentry-boolean--true)
+            - [`route()`](#route)
         - [holistic example](#holistic-example)
     - [goals](#goals)
 
@@ -203,11 +203,13 @@ target: PropTypes.string,
 
 ### utilities
 
-#### `route(url: String, addNewHistoryEntry: Boolean = true)`
+#### `route()`
 
 Use this API to programmatically change the route browser-side. It uses `pushState` or `replaceState` under the hood, depending on if you pass the second argument. Defaults to creating a new browser history entry.
 
 ```js
+// signature: route(url: String, addNewHistoryEntry: Boolean = true)
+
 route('/some/other/url');
 ```
 
@@ -247,7 +249,7 @@ const NotFound = () => (
     <RoutingState>
       {routing => (
         <p>
-          No page was found with the path:&nbsp;
+          No page was found with the path:
           <code>{routing.location.pathname}</code>
         </p>
       )}

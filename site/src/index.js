@@ -1,4 +1,4 @@
-import { rgba } from 'polished';
+import { darken, rgba } from 'polished';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { injectGlobal } from 'styled-components';
@@ -54,8 +54,30 @@ injectGlobal`
     margin-bottom: 3rem;
   }
 
-  h1, a {
+  ul {
+    margin: 0;
+    padding: 0;
+
+    ul {
+      margin: 0 0 1rem 1.5rem;
+    }
+
+    li {
+      margin: 0.5rem 0;
+    }
+  }
+
+  h1 {
     color: ${red};
+  }
+
+  a {
+    color: ${red};
+    transition: 300ms color ease;
+
+    &:hover {
+      color: ${darken(0.2, red)};
+    }
   }
 
   nav {
@@ -79,7 +101,10 @@ injectGlobal`
 
     code {
       background: none !important;
+      display: block;
       font-size: inherit;
+      overflow-x: scroll;
+      padding: 0;
     }
   }
 

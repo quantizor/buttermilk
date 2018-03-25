@@ -23,6 +23,8 @@ class App extends Component {
   }
 }
 
+const desktop = '@media all and (min-width: 768px)';
+
 const Container = styled.div`
   background: #FAFAFA;
   min-height: 100%;
@@ -33,21 +35,34 @@ const Header = styled.header`
   background: white;
   display: flex;
   flex-direction: column;
-  min-height: 300px;
   justify-content: center;
+  min-height: 125px;
+
+  ${desktop} {
+    min-height: 300px;
+  }
 `;
 
 const Headline = styled.h1`
   font-family: 'Vibur', sans-serif;
-  font-size: 10rem;
+  font-size: 5rem;
   margin: 0;
   transform: rotate(-6deg);
   transform-origin: center;
+
+  ${desktop} {
+    font-size: 10rem;
+    text-shadow: 0 0 300px white;
+    transition: 500ms text-shadow;
+
+    &:hover {
+      text-shadow: 0 0 300px;
+    }
+  }
 `;
 
 const Content = styled.main`
   font-size: 1.6rem;
-  padding: 3rem 0;
 `;
 
 const routes = [{

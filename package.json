@@ -6,7 +6,8 @@
   "scripts": {
     "build": "NODE_ENV=production rollup -c rollup.config.js",
     "test": "jest",
-    "size": "bundlesize"
+    "size": "bundlesize",
+    "prepublish": "npm run build"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

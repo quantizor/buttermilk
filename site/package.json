@@ -16,8 +16,10 @@
     "webpack-dev-server": "^3.1.1"
   },
   "scripts": {
-    "prebuild": "cp -f node_modules/rainbow-code/{dist/rainbow.min.js,themes/css/solarized-light.css} public/vendor",
+    "copy:vendor": "mkdir -p public/vendor && cp -f node_modules/rainbow-code/{dist/rainbow.min.js,themes/css/solarized-light.css} public/vendor",
+    "prebuild": "npm run copy:vendor",
     "build": "NODE_ENV=production webpack",
+    "prestart": "npm run copy:vendor",
     "start": "webpack-dev-server --config webpack.config.js --hot --open --content-base public"
   },
   "devDependencies": {
