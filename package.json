@@ -1,6 +1,6 @@
 {
   "name": "buttermilk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/probablyup/buttermilk"
@@ -12,6 +12,10 @@
   },
   "main": "dist/cjs.js",
   "module": "dist/es.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "NODE_ENV=production rollup -c rollup.config.js",
     "test": "jest",
