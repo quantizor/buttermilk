@@ -2,7 +2,6 @@ import LiteURL from 'lite-url';
 
 const PATH_EXTRACTION_R = /:[^/?#()]*/g;
 
-// TODO: memoize?
 export function extractParamsFromPath(path) {
     return (
         path.match(PATH_EXTRACTION_R) || []
@@ -71,7 +70,6 @@ export function parseUrl(url) {
  * If you want to change the routing state on server, just pass a new url to
  * the <Router> component.
  */
-// TODO: tests
 export function route(url, addNewHistoryEntry = true) {
     history[addNewHistoryEntry ? 'pushState' : 'replaceState']({}, '', url);
 

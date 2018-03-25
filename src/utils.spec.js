@@ -121,3 +121,35 @@ describe('getRouteParamsForURL(Object, URLString)', () => {
         });
     });
 });
+
+describe('route(URLString, Boolean?)', () => {
+    beforeEach(() => {
+        jest.spyOn(window, 'dispatchEvent').mockImplementation(() => {});
+        jest.spyOn(history, 'pushState').mockImplementation(() => {});
+        jest.spyOn(history, 'replaceState').mockImplementation(() => {});
+    });
+
+    it('uses pushState by default to change the URL', () => {
+        utils.route('/foo');
+        expect(history.pushState).toHaveBeenCalledWith(
+            {}, '', '/foo'
+        );
+    });
+
+    it('uses replaceState if the second argument is false', () => {
+        utils.route('/foo', false);
+        expect(history.replaceState).toHaveBeenCalledWith(
+            {}, '', '/foo'
+        );
+    });
+
+    it('ultimately dispatches a popstate event', () => {
+        utils.route('/foo', false);
+
+        expect(window.dispatchEvent).toHaveBeenCalledWith(
+            expect.objectContaining({
+                type: 'popstate',
+            }),
+        );
+    });
+});

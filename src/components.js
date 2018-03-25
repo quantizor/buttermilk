@@ -201,7 +201,7 @@ export class Router extends React.Component {
                     instance.setState({ children: result });
                     this.promise = null;
                 }
-            }.bind(unknown));
+            }.bind(unknown), NOOP);
 
             return null;
         } else {
@@ -217,12 +217,8 @@ export class Router extends React.Component {
         const cb = () => this.props.routeDidChange(nextValue, currentValue);
         const finish = () => this.recomputeRoutingState(nextUrl, this.state.routes, cb);
 
-        // TODO: tests
         if (result === false) return;
-
-        // TODO: tests
-        else if (result instanceof Promise) result.then(() => finish());
-
+        else if (result instanceof Promise) result.then(finish, NOOP);
         else finish();
     }
 

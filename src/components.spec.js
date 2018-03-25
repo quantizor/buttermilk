@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Simulate } from 'react-dom/test-utils';
 
 import { Link, Router, RoutingState } from './components';
+import { route } from './utils';
 
 let root;
 const render = ({ url, ...props }) => {
@@ -100,7 +101,7 @@ describe('Router', () => {
     });
 
     it('handles hashchange events', () => {
-        const instance = render({
+        render({
             routes: [{
                 path: '#foo',
                 render: () => <div>bar</div>,
@@ -117,6 +118,170 @@ describe('Router', () => {
         window.dispatchEvent(new Event('hashchange'));
 
         expect(root.innerHTML).toContain('oh well');
+    });
+
+    describe('routerDidInitialize', () => {
+        it('is called upon construction with the initially-active routing', () => {
+            const stub = jest.fn();
+
+            render({
+                routerDidInitialize: stub,
+                routes: [{
+                    path: '#foo',
+                    render: () => <div>bar</div>,
+                }, {
+                    path: '*',
+                    render: () => <div>oh well</div>,
+                }],
+                url: 'http://foo.com/#foo',
+            });
+
+            expect(stub).toHaveBeenCalledWith({
+                location: expect.objectContaining({
+                    hash: '#foo',
+                }),
+                params: {},
+                route: expect.objectContaining({
+                    path: '#foo'
+                }),
+            })
+        });
+    });
+
+    describe('routeWillChange', () => {
+        it('is called before applying a route update', () => {
+            const stub = jest.fn();
+
+            render({
+                routes: [{
+                    path: '/bar',
+                    render: () => <div>bar</div>,
+                }, {
+                    path: '*',
+                    render: () => <div>oh well</div>,
+                }],
+                routeWillChange: stub,
+                url: 'http://foo.com/bar',
+            });
+
+            Router.getURL.mockImplementation(() => 'http://foo.com/');
+            window.dispatchEvent(new Event('popstate'));
+
+            expect(stub).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    route: expect.objectContaining({
+                        path: '/bar'
+                    }),
+                }),
+
+                expect.objectContaining({
+                    route: expect.objectContaining({
+                        path: '*'
+                    }),
+                }),
+            );
+        });
+
+        it('accepts a promise', async () => {
+            const stub = jest.fn();
+
+            render({
+                routes: [{
+                    path: '/bar',
+                    render: () => <div>bar</div>,
+                }, {
+                    path: '*',
+                    render: () => <div>oh well</div>,
+                }],
+                routeWillChange: () => Promise.resolve(),
+                routeDidChange: stub,
+                url: 'http://foo.com/bar',
+            });
+
+            Router.getURL.mockImplementation(() => 'http://foo.com/');
+            await window.dispatchEvent(new Event('popstate'));
+
+            expect(stub).toHaveBeenCalled();
+        });
+
+        it('is abortable by returning false', () => {
+            const stub = jest.fn();
+
+            render({
+                routes: [{
+                    path: '/bar',
+                    render: () => <div>bar</div>,
+                }, {
+                    path: '*',
+                    render: () => <div>oh well</div>,
+                }],
+                routeWillChange: () => false,
+                routeDidChange: stub,
+                url: 'http://foo.com/bar',
+            });
+
+            Router.getURL.mockImplementation(() => 'http://foo.com/');
+            window.dispatchEvent(new Event('popstate'));
+
+            expect(stub).not.toHaveBeenCalled();
+        });
+
+        it('is abortable by rejecting a promise', async () => {
+            const stub = jest.fn();
+
+            render({
+                routes: [{
+                    path: '/bar',
+                    render: () => <div>bar</div>,
+                }, {
+                    path: '*',
+                    render: () => <div>oh well</div>,
+                }],
+                routeWillChange: () => Promise.reject(),
+                routeDidChange: stub,
+                url: 'http://foo.com/bar',
+            });
+
+            Router.getURL.mockImplementation(() => 'http://foo.com/');
+            await window.dispatchEvent(new Event('popstate'));
+
+            expect(stub).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('routeDidChange', () => {
+        it('is called after applying a route update', () => {
+            const stub = jest.fn();
+
+            render({
+                routes: [{
+                    path: '/bar',
+                    render: () => <div>bar</div>,
+                }, {
+                    path: '*',
+                    render: () => <div>oh well</div>,
+                }],
+                routeDidChange: stub,
+                url: 'http://foo.com/bar',
+            });
+
+            Router.getURL.mockImplementation(() => 'http://foo.com/');
+            window.dispatchEvent(new Event('popstate'));
+
+            expect(stub).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    route: expect.objectContaining({
+                        path: '*'
+                    }),
+                }),
+
+                expect.objectContaining({
+                    route: expect.objectContaining({
+                        path: '/bar'
+                    }),
+                }),
+            );
+        });
     });
 });
 
