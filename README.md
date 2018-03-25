@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/buttermilk.svg)](https://badge.fury.io/js/buttermilk) [![build status](https://api.travis-ci.org/probablyup/buttermilk.svg)](https://travis-ci.org/probablyup/buttermilk) [![codecov](https://codecov.io/gh/probablyup/buttermilk/branch/master/graph/badge.svg)](https://codecov.io/gh/probablyup/buttermilk) [![downloads](https://img.shields.io/npm/dm/buttermilk.svg)](https://npm-stat.com/charts.html?package=buttermilk)
+
 # buttermilk
 
 <!-- TOC -->
