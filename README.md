@@ -26,6 +26,15 @@ npm i buttermilk
 yarn add buttermilk
 ```
 
+You can also use it from a CDN like unpkg:
+
+```
+https://unpkg.com/buttermilk@1.0.0/dist/umd.js
+https://unpkg.com/buttermilk@1.0.0/dist/umd.min.js
+```
+
+The exports will be accessible at `window.Buttermilk`. Note that this requires, `react` (`window.React`) and `prop-types` (`window.PropTypes`) to also be accessible in the `window` scope.
+
 ## usage
 
 Setting up `buttermilk` involves placing a `<Router>` component on your page and feeding it an array of route definitions. If you learn better by reverse engineering, check out the [holistic example](#holistic-example).

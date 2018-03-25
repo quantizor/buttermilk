@@ -6,12 +6,10 @@ import replace from 'rollup-plugin-replace';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import uglify from 'rollup-plugin-uglify';
 
-function generateConfig(overrides, externalHelpers = false) {
+function generateConfig(overrides, minify = false, externalHelpers = false) {
     return merge({}, {
         input: 'src/index.js',
         output: {
-            file: 'dist/umd.js',
-            format: 'umd',
             globals: { react: 'React', 'prop-types': 'PropTypes' },
             name: 'buttermilk',
             sourcemap: true,
@@ -39,23 +37,47 @@ function generateConfig(overrides, externalHelpers = false) {
             replace({
                 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
             }),
-            uglify(),
-        ],
+            minify ? uglify() : null,
+        ].filter(Boolean),
     }, overrides);
 }
 
 export default [
-    generateConfig({}),
+    generateConfig({
+        output: {
+            file: 'dist/umd.js',
+            format: 'umd',
+        }
+    }),
+    generateConfig({
+        output: {
+            file: 'dist/umd.min.js',
+            format: 'umd',
+        }
+    }, true),
     generateConfig({
         output: {
             file: 'dist/cjs.js',
             format: 'cjs',
         }
-    }, true),
+    }, false, true),
+    generateConfig({
+        output: {
+            file: 'dist/cjs.min.js',
+            format: 'cjs',
+        }
+    }, true, true),
     generateConfig({
         output: {
             file: 'dist/es.js',
             format: 'es',
         }
-    }, true),
+    }, false, true),
+
+    generateConfig({
+        output: {
+            file: 'dist/es.min.js',
+            format: 'es',
+        }
+    }, true, true),
 ];

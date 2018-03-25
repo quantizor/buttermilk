@@ -1,6 +1,15 @@
 {
   "name": "buttermilk",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/probablyup/buttermilk"
+  },
+  "author": {
+    "name": "Evan Scott",
+    "email": "probablyup@gmail.com",
+    "url": "https://yaycmyk.com"
+  },
   "main": "dist/cjs.js",
   "module": "dist/es.js",
   "scripts": {
@@ -38,7 +47,7 @@
   },
   "bundlesize": [
     {
-      "path": "./dist/umd.js",
+      "path": "./dist/umd.min.js",
       "maxSize": "5 kB"
     }
   ]
