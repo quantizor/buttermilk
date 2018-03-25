@@ -13,5 +13,5 @@ cache:
     - "node_modules"
 
 script:
-  - yarn test --coverage --coverage-directory coverage
+  - yarn test --coverage
   - codecov
