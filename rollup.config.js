@@ -20,9 +20,9 @@ function generateConfig(overrides, minify = false, externalHelpers = false) {
             babel({
                 babelrc: false,
                 plugins: [
-                    externalHelpers ? 'external-helpers' : null,
                     'transform-class-properties',
-                ].filter(Boolean),
+                ],
+                runtimeHelpers: externalHelpers,
                 presets: [
                     ['env', {
                         modules: false,
