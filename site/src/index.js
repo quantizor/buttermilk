@@ -105,6 +105,7 @@ injectGlobal`
       background: none !important;
       display: block;
       font-size: inherit;
+      overflow-wrap: normal;
       overflow-x: scroll;
       padding: 0;
     }
