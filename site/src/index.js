@@ -106,8 +106,9 @@ injectGlobal`
       display: block;
       font-size: inherit;
       overflow-wrap: normal;
-      overflow-x: scroll;
+      overflow-x: auto;
       padding: 0;
+      -webkit-overflow-scrolling: touch;
     }
   }
 
