@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
 import { hot } from 'react-hot-loader';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 
 import { Link, Router } from '../../src';
@@ -88,11 +88,9 @@ const routes = [{
   render: () => Home,
 }];
 
-const HotApp = hot(module)(App);
-
-export default () => (
+export default hot(module)(() => (
   <Router
-    outerComponent={HotApp}
+    outerComponent={App}
     routes={routes}
   />
-);
+));

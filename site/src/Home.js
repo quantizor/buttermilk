@@ -1,13 +1,12 @@
 import { rgba } from 'polished';
 import Markdown from 'markdown-to-jsx';
 import React from 'react';
-import { hot } from 'react-hot-loader';
 import styled from 'styled-components';
 import readme from 'raw-loader!../../README.md';
 
 const [/* h1 tag, badges */, navigation, content] = readme.split(/<!-- \/?TOC -->/);
 
-class Home extends React.PureComponent {
+export default class Home extends React.PureComponent {
     render() {
         return (
             <Wrapper>
@@ -164,5 +163,3 @@ const Button = styled.button`
         }
     }
 `;
-
-export default hot(module)(Home);

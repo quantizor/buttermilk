@@ -161,6 +161,10 @@ export class Router extends React.Component {
         window.addEventListener('hashchange', this.handleLocationChange);
     }
 
+    componentWillUpdate() {
+        this.recomputeRoutingState
+    }
+
     componentWillUnmount() {
         window.removeEventListener('popstate', this.handleLocationChange);
         window.removeEventListener('hashchange', this.handleLocationChange);

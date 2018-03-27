@@ -31,8 +31,8 @@ yarn add buttermilk
 You can also use it from a CDN like unpkg:
 
 ```
-https://unpkg.com/buttermilk@1.0.1/dist/umd.js
-https://unpkg.com/buttermilk@1.0.1/dist/umd.min.js
+https://unpkg.com/buttermilk@1.0.3/dist/umd.js
+https://unpkg.com/buttermilk@1.0.3/dist/umd.min.js
 ```
 
 The exports will be accessible at `window.Buttermilk`. Note that this requires, `react` (`window.React`) and `prop-types` (`window.PropTypes`) to also be accessible in the `window` scope.
