@@ -15,6 +15,7 @@
         - [utilities](#utilities)
             - [`route()`](#route)
         - [holistic example](#holistic-example)
+    - [more examples](#more-examples)
     - [goals](#goals)
 
 <!-- /TOC -->
@@ -305,6 +306,10 @@ const root = document.body.appendChild(document.createElement("div"));
 
 ReactDOM.render(<Router routes={routes} outerComponent={App} />, root);
 ```
+
+## more examples
+
+- holistic example + animated route transitions: <https://codesandbox.io/s/30llnkwj5q>
 
 ## goals
 
