@@ -35,7 +35,7 @@ https://unpkg.com/buttermilk@1.0.3/dist/umd.js
 https://unpkg.com/buttermilk@1.0.3/dist/umd.min.js
 ```
 
-The exports will be accessible at `window.Buttermilk`. Note that this requires, `react` (`window.React`) and `prop-types` (`window.PropTypes`) to also be accessible in the `window` scope.
+The exports will be accessible at `window.Buttermilk`. Note that this requires `react` (`window.React`) and `prop-types` (`window.PropTypes`) to also be accessible in the `window` scope.
 
 ## usage
 
