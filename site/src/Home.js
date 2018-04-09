@@ -75,6 +75,8 @@ const Navigation = styled.nav`
 
         ul {
             display: inline-block;
+            margin: 0;
+            padding: 0;
 
             ul {
                 display: none;
@@ -100,9 +102,16 @@ const Navigation = styled.nav`
             white-space: normal;
         }
 
+
         ul {
+            margin: 0;
+            padding: 0;
+
             ul {
+                margin: 0 0 1rem 1.5rem;
+
                 li {
+                    margin: 0.5rem 0;
                     list-style: lower-roman;
                 }
             }

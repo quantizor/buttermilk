@@ -55,16 +55,8 @@ injectGlobal`
   }
 
   ul {
-    margin: 0;
     padding: 0;
-
-    ul {
-      margin: 0 0 1rem 1.5rem;
-    }
-
-    li {
-      margin: 0.5rem 0;
-    }
+    list-style-position: inside;
   }
 
   h1 {
