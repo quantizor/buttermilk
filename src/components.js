@@ -1,4 +1,3 @@
-import createContext from 'create-react-context';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -14,9 +13,9 @@ import {
     valid,
 } from './utils';
 
-const CONTEXT = createContext('buttermilk');
+const { Provider, Consumer } = React.createContext();
 const BROWSER = typeof window !== 'undefined';
-const NOOP = function () {};
+const NOOP = function () { };
 
 /**
  * The gist of Buttermilk's router is that it acts like a controlled component when used
@@ -144,8 +143,8 @@ export class Router extends React.Component {
      * to determine routing updates.
      */
     shouldRecompute(nextProps) {
-        return      nextProps.routes !== this.props.routes
-               || ((nextProps.url !== this.state.url) && !BROWSER);
+        return nextProps.routes !== this.props.routes
+            || ((nextProps.url !== this.state.url) && !BROWSER);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -174,11 +173,11 @@ export class Router extends React.Component {
         const contextValue = this.getContextValue(this.state.url, this.state.activeRoute);
 
         return (
-            <CONTEXT.Provider value={contextValue}>
+            <Provider value={contextValue}>
                 <this.props.outerComponent {...contextValue}>
                     {this.renderChildren(this.state.children, contextValue)}
                 </this.props.outerComponent>
-            </CONTEXT.Provider>
+            </Provider>
         );
     }
 
@@ -289,7 +288,7 @@ export class Router extends React.Component {
  *   }}
  * </RoutingState>
  */
-export const RoutingState = CONTEXT.Consumer;
+export const RoutingState = Consumer;
 
 /**
  * A polymorphic anchor link component. On click/tap/enter if the destination
