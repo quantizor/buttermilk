@@ -1,2 +1,2 @@
 export * from './components';
-export { route } from './utils';
+export { match, route } from './utils';

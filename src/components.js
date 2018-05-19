@@ -1,14 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import regexify from './regexify';
-
 import {
-    extractParamsFromPath,
+    createRouteContext,
     findRoute,
     getDisplayName,
-    getRouteParamsForURL,
-    parseUrl,
+    processRoute,
     route,
     valid,
 } from './utils';
@@ -135,7 +132,7 @@ export class Router extends React.Component {
 
         this.state = this.getStateUpdateForUrl(url, routes);
 
-        props.routerDidInitialize(this.getContextValue(url, this.state.activeRoute));
+        props.routerDidInitialize(createRouteContext(this.state.activeRoute, url));
     }
 
     /**
@@ -170,7 +167,7 @@ export class Router extends React.Component {
     }
 
     render() {
-        const contextValue = this.getContextValue(this.state.url, this.state.activeRoute);
+        const contextValue = createRouteContext(this.state.activeRoute, this.state.url);
 
         return (
             <Provider value={contextValue}>
@@ -213,9 +210,9 @@ export class Router extends React.Component {
     }
 
     handleLocationChange = (/* event */) => {
-        const currentValue = this.getContextValue(this.state.url, this.state.activeRoute);
+        const currentValue = createRouteContext(this.state.activeRoute, this.state.url);
         const { route: nextRoute, url: nextUrl } = findRoute(this.state.routes, Router.getURL());
-        const nextValue = this.getContextValue(nextUrl, nextRoute);
+        const nextValue = createRouteContext(nextRoute, nextUrl);
         const result = this.props.routeWillChange(currentValue, nextValue);
         const cb = () => this.props.routeDidChange(nextValue, currentValue);
         const finish = () => this.recomputeRoutingState(nextUrl, this.state.routes, cb);
@@ -233,17 +230,6 @@ export class Router extends React.Component {
         );
     }
 
-    /**
-     * Returns a react-router-esque object with parsed location and params.
-     */
-    getContextValue = (url, route) => {
-        return {
-            location: parseUrl(url),
-            params: getRouteParamsForURL(route, url),
-            route,
-        };
-    }
-
     processRoutes(routes) {
         if (process.env.NODE_ENV !== 'production') {
             if (!this.noFallbackWarningEmitted && routes.every(route => route.path !== '*')) {
@@ -252,13 +238,7 @@ export class Router extends React.Component {
             }
         }
 
-        return routes.map(
-            route =>
-                Object.assign({}, route, {
-                    params: extractParamsFromPath(route.path),
-                    test: regexify(route.path),
-                })
-        );
+        return routes.map(processRoute);
     }
 
     getStateUpdateForUrl(url, routes) {
@@ -268,8 +248,8 @@ export class Router extends React.Component {
             activeRoute: result.route,
             children: this.processChildren(
                 result.route.render(
-                    this.getContextValue(
-                        result.url, result.route
+                    createRouteContext(
+                        result.route, result.url
                     )
                 )
             ),
@@ -332,7 +312,7 @@ export class Link extends React.PureComponent {
 
     render() {
         return (
-            <CONTEXT.Consumer>
+            <Consumer>
                 {({ route }) => {
                     return React.createElement(this.props.as, Object.assign({}, this.props, {
                         'data-active': valid(route.test, this.props.href) ? '' : undefined,
@@ -345,7 +325,7 @@ export class Link extends React.PureComponent {
                         target: this.shouldRenderAnchorProps() ? this.props.target : undefined,
                     }));
                 }}
-            </CONTEXT.Consumer>
+            </Consumer>
         );
     }
 

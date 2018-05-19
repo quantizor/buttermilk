@@ -1,4 +1,5 @@
 import LiteURL from 'lite-url';
+import regexify from './regexify';
 
 const PATH_EXTRACTION_R = /:[^/?#()]*/g;
 
@@ -6,7 +7,7 @@ export function extractParamsFromPath(path) {
     return (
         path.match(PATH_EXTRACTION_R) || []
 
-    // remove the leading colon
+        // remove the leading colon
     ).map(param => param.slice(1));
 }
 
@@ -22,6 +23,13 @@ export function getRouteParamsForURL(route, url) {
     }, {});
 }
 
+export function processRoute(route) {
+    return Object.assign({}, route, {
+        params: extractParamsFromPath(route.path),
+        test: regexify(route.path),
+    });
+}
+
 export function valid(validator, url) {
     if (validator instanceof RegExp) {
         return validator.test(url);
@@ -30,15 +38,28 @@ export function valid(validator, url) {
     }
 }
 
+export function getRedirectUrl(redirect, originalUrl) {
+    /** Fully-resolved, no work to be done here. */
+    if (redirect.includes('://')) return redirect;
+
+    const { protocol, host } = new LiteURL(originalUrl);
+
+    /**
+     * Reconstruct a full URL based on the original with the path
+     * switched to the given redirect.
+     */
+    return `${protocol}//${host}${redirect}`;
+}
+
 export function findRoute(routes, url) {
     const route = routes.find(route => valid(route.test, url));
 
     if (route) {
-        if (route.redirect) return findRoute(routes, route.redirect);
-        else                return { route, url };
+        if (route.redirect) return findRoute(routes, getRedirectUrl(route.redirect, url));
+        else return { route, url };
     }
 
-    throw new Error(`could not find a route for url ${url}`);
+    throw new Error(`No valid routes were found for URL ${url}. Did you forget to define a fallback "*" path?`);
 }
 
 export function getDisplayName(Component) {
@@ -59,6 +80,50 @@ export function parseUrl(url) {
     }, {});
 
     return parsed;
+}
+
+/**
+ * Generates an object containing a window.location facsimile
+ * for the given URL, any parsed route parameters, and the
+ * route itself.
+ *
+ * @returns {Object} RoutingContext
+ */
+export function createRouteContext(route, url) {
+    return {
+        location: parseUrl(url),
+        params: getRouteParamsForURL(route, url),
+        route,
+    };
+}
+
+/**
+ * Given a set of route definitions and a fully-resolved URL,
+ * return a routing context object.
+ *
+ * If a redirect should be performed, the "redirect" key will be
+ * set with the appropriate URL.
+ *
+ * {
+ *     location: object,
+ *     params: object,
+ *     route: object,
+ *     redirect: string?,
+ * }
+ */
+export function match(routes, url) {
+    const processedRoutes = routes.map(processRoute);
+
+    /**
+     * If a redirect occurred, finalUrl may be different from
+     * the initial url.
+     */
+    const { route, url: finalUrl } = findRoute(processedRoutes, url);
+    const ret = Object.assign({}, createRouteContext(route, finalUrl));
+
+    if (finalUrl !== url) ret.redirect = finalUrl;
+
+    return ret;
 }
 
 /**
