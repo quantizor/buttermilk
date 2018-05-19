@@ -2,7 +2,6 @@ import { hot } from 'react-hot-loader';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import { Link, Router } from '../../src';
 import Home from './Home';
 
 const VERSION = preval`
@@ -83,14 +82,8 @@ const Content = styled.main`
   font-size: 1.6rem;
 `;
 
-const routes = [{
-  path: '*',
-  render: () => Home,
-}];
-
 export default hot(module)(() => (
-  <Router
-    outerComponent={App}
-    routes={routes}
-  />
+  <App>
+    <Home />
+  </App>
 ));

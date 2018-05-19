@@ -3033,11 +3033,17 @@ iconv-lite@0.4.19:
   version "0.4.19"
   resolved "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
 
-iconv-lite@^0.4.17, iconv-lite@~0.4.13:
+iconv-lite@^0.4.17:
   version "0.4.21"
   resolved "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.21.tgz#c47f8733d02171189ebc4a400f3218d348094798"
   dependencies:
     safer-buffer "^2.1.0"
+
+iconv-lite@~0.4.13:
+  version "0.4.23"
+  resolved "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.23.tgz#297871f63be507adcfbfca715d0cd0eed84e9a63"
+  dependencies:
+    safer-buffer ">= 2.1.2 < 3"
 
 icss-replace-symbols@^1.1.0:
   version "1.1.0"
@@ -3835,8 +3841,8 @@ map-visit@^1.0.0:
     object-visit "^1.0.0"
 
 markdown-to-jsx@^6.5.2:
-  version "6.6.1"
-  resolved "https://registry.npmjs.org/markdown-to-jsx/-/markdown-to-jsx-6.6.1.tgz#858b37f8a92526b1f3407593ff77c95927720bef"
+  version "6.6.3"
+  resolved "https://registry.npmjs.org/markdown-to-jsx/-/markdown-to-jsx-6.6.3.tgz#ccb248236257d4116822b8994fbf9606d045d187"
   dependencies:
     prop-types "^15.5.10"
     unquote "^1.1.0"
@@ -5453,7 +5459,7 @@ safe-regex@^1.1.0:
   dependencies:
     ret "~0.1.10"
 
-safer-buffer@^2.1.0:
+"safer-buffer@>= 2.1.2 < 3", safer-buffer@^2.1.0:
   version "2.1.2"
   resolved "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
 
@@ -6129,8 +6135,8 @@ typedarray@^0.0.6:
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
 ua-parser-js@^0.7.9:
-  version "0.7.17"
-  resolved "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.17.tgz#e9ec5f9498b9ec910e7ae3ac626a805c4d09ecac"
+  version "0.7.18"
+  resolved "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.18.tgz#a7bfd92f56edfb117083b69e31d2aa8882d4b1ed"
 
 uglify-es@^3.3.4:
   version "3.3.9"

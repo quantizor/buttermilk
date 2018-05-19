@@ -57,6 +57,11 @@ injectGlobal`
   ul {
     padding: 0;
     list-style-position: inside;
+
+    li p {
+      display: inline-block;
+      margin-top: 0;
+    }
   }
 
   h1 {

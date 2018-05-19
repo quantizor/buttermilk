@@ -7,14 +7,15 @@
 - [buttermilk](#buttermilk)
     - [installation](#installation)
     - [usage](#usage)
-        - [configuration](#configuration)
         - [components](#components)
             - [`<Router>`](#router)
             - [`<RoutingState>`](#routingstate)
             - [`<Link>`](#link)
         - [utilities](#utilities)
+            - [`match(routes, url)`](#matchroutes-url)
             - [`route()`](#route)
         - [holistic example](#holistic-example)
+        - [without a bundler](#without-a-bundler)
     - [more examples](#more-examples)
     - [goals](#goals)
 
@@ -29,28 +30,36 @@ npm i buttermilk
 yarn add buttermilk
 ```
 
-You can also use it from a CDN like unpkg:
-
-```
-https://unpkg.com/buttermilk@1.0.3/dist/umd.js
-https://unpkg.com/buttermilk@1.0.3/dist/umd.min.js
-```
-
-The exports will be accessible at `window.Buttermilk`. Note that this requires `react` (`window.React`) and `prop-types` (`window.PropTypes`) to also be accessible in the `window` scope.
-
 ## usage
 
 Setting up `buttermilk` involves placing a `<Router>` component on your page and feeding it an array of route definitions. If you learn better by reverse engineering, check out the [holistic example](#holistic-example).
 
-### configuration
+A basic, starter setup:
 
-A route should look like this:
+```jsx
+import { Router } from 'buttermilk';
+import React from 'react';
 
-```js
-{
-  path: String | RegExp | Function,
-  redirect: String?,
-  render: Function?,  // note that this is required if "redirect" is not passed
+// whatever your folder structure looks like, etc.
+import FooPage from '../foo';
+import NotFoundPage from '../404';
+
+class App extends React.Component {
+  render() {
+    return (
+      <Router
+        routes={[
+          {
+            path: '/foo',
+            render: () => FooPage,
+          }, {
+            path: '*',
+            render: () => NotFoundPage,
+          }
+        ]}
+      />
+    );
+  }
 }
 ```
 
@@ -68,7 +77,45 @@ functional | `yourValidationFunction(url)`
 regex | `^(?=bar)/foo`
 query string | `?foo=bar`
 
-The only rule is there must be a fallback route at the end of the routing chain: `path: '*'`. Otherwise, you are free to compose routes as it makes sense for your app.
+The only hard rule is there must be a fallback route at the end of the routing chain: `path: '*'`. Otherwise, you are free to compose routes as it makes sense for your app.
+
+A route configuration should have this shape:
+
+```js
+{
+  path: String | RegExp | Function,
+  redirect: String?,
+  render: Function?,  // note that this is required if "redirect" is not passed
+}
+```
+
+Return whatever you'd like from the `render` function. A few ideas:
+
+- A React component class
+
+  ```js
+  render: () => HelloWorldPage,
+  ```
+
+- Some JSX
+
+  ```jsx
+  render: () => <div>Hi!</div>,
+  ```
+
+- A string
+
+  ```js
+  render: () => 'Howdy!',
+  ```
+
+- A promise resolving to one of the above (great for async-loading pages)
+
+  ```js
+  render: () => import('./HelloWorld').then(mdl => mdl.default),
+  ```
+
+If it's a component class, Buttermilk will inject the [routing context](#routingstate) as props.
 
 ### components
 
@@ -77,6 +124,8 @@ The only rule is there must be a fallback route at the end of the routing chain:
 The gist of Buttermilk's router is that it acts like a controlled component when used server-side (driven by `props.url`) and an uncontrolled one client-side (driven by the value of `window.location.href` and intercepted navigation events.)
 
 In the browser, use either a `<Link>` component or the `route()` utility method to change routes. The router will also automatically pick up popstate events caused by user-driven browser navigation (forward, back buttons, etc.)
+
+Available props:
 
 ```js
 /**
@@ -185,6 +234,14 @@ If something other than an anchor tag is specified via `props.as`, a `[role="lin
 
 Adds `[data-active]` if the given href matches the active route.
 
+```jsx
+<Link as="button" href="/somewhere" target="_blank">
+  Somewhere over the rainbow…
+</Link>
+```
+
+Available props:
+
 ```js
 /**
  * An HTML tag name or valid ReactComponent class to be rendered. Must
@@ -212,13 +269,73 @@ href: PropTypes.string.isRequired,
 target: PropTypes.string,
 ```
 
-```jsx
-<Link as="button" href="/somewhere" target="_blank">
-  Somewhere over the rainbow…
-</Link>
+### utilities
+
+#### `match(routes, url)`
+
+This is an advanced API meant primarily for highly-custom server side rendering use cases. Provide your array of route defintions and the fully-resolved URL to receive the matched route, route context, and any suggested redirect.
+
+```js
+import { match } from 'buttermilk';
+
+const url = 'https://fizz.com/buzz';
+
+const routes = [{
+  path: '/foo',
+  render: () => FooPage,
+}, {
+  path: '/bar',
+  render: () => BarPage,
+}, {
+  path: '*',
+  render: () => NotFoundPage,
+}];
+
+const { location, params, redirect, route } = match(routes, url);
 ```
 
-### utilities
+When using this API, you'll probably want to have a more streamlined `<Router>` setup for the server since we're doing all the work upfront to find the correct route:
+
+```js
+import { match, Router } from 'buttermilk';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+
+import routes from '../routes';
+
+/**
+ * An example express middleware.
+ */
+export default function renderingMiddleware(req, res, next) {
+  const url = req.protocol + '//' + req.get('host') + req.originalUrl;
+
+  const { location, params, redirect, route } = match(routes, url);
+
+  if (redirect) return res.redirect(redirect);
+
+  const html = ReactDOMServer.renderToString(
+    <Router
+      url={url}
+      routes={[{
+        ...route,
+        path: '*',
+      }]}
+    />
+  );
+
+  /**
+   * route.title below is an example arbitrary prop you could add to the
+   * route definition if desired
+   */
+  res.send(`
+    <!doctype html>
+    <html>
+      <head><title>${route.title}</title></head>
+      <body>${html}</body>
+    </html>
+  `);
+}
+```
 
 #### `route()`
 
@@ -306,6 +423,17 @@ const root = document.body.appendChild(document.createElement("div"));
 
 ReactDOM.render(<Router routes={routes} outerComponent={App} />, root);
 ```
+
+### without a bundler
+
+You can also use consume Buttermilk from a CDN like unpkg:
+
+```
+https://unpkg.com/buttermilk@1.1.0/dist/umd.js
+https://unpkg.com/buttermilk@1.1.0/dist/umd.min.js
+```
+
+The exports will be accessible at `window.Buttermilk`. Note that this requires `react >= 16.3` (`window.React`) and `prop-types` (`window.PropTypes`) to also be accessible in the `window` scope.
 
 ## more examples
 
