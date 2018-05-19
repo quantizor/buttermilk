@@ -7,11 +7,7 @@
     "url": "https://github.com/probablyup/buttermilk"
   },
   "homepage": "https://buttermilk.js.org/",
-  "author": {
-    "name": "Evan Scott",
-    "email": "probablyup@gmail.com",
-    "url": "https://yaycmyk.com"
-  },
+  "author": "Evan Scott (https://probablyup.com)",
   "main": "dist/cjs.js",
   "module": "dist/es.js",
   "files": [
