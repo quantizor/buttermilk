@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "babel-plugin-preval": "^1.6.4",
     "babel-plugin-styled-components": "^1.5.1",
     "markdown-to-jsx": "^6.5.2",
     "next": "^5.0.0",
@@ -15,30 +14,20 @@
     "styled-components": "^3.2.3"
   },
   "scripts": {
+    "dev": "next",
     "copy:vendor": "mkdir -p static/vendor && cp -f node_modules/rainbow-code/dist/rainbow.min.js node_modules/rainbow-code/themes/css/solarized-light.css static/vendor",
     "prebuild": "npm run copy:vendor",
     "build": "next build && next export -o public",
     "prestart": "npm run copy:vendor",
     "start": "next"
   },
-  "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-env": "^1.6.1"
-  },
+  "devDependencies": {},
   "babel": {
-    "plugins": [
-      "preval",
-      "styled-components",
-      "syntax-dynamic-import",
-      "transform-class-properties"
-    ],
     "presets": [
-      ["env", {
-        "modules": false
-      }],
-      "react"
+      "next/babel"
+    ],
+    "plugins": [
+      "styled-components"
     ]
   }
 }
