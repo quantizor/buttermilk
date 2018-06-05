@@ -1,4 +1,3 @@
-import { hot } from 'react-hot-loader';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
@@ -82,8 +81,8 @@ const Content = styled.main`
   font-size: 1.6rem;
 `;
 
-export default hot(module)(() => (
+export default () => (
   <App>
     <Home />
   </App>
-));
+);
