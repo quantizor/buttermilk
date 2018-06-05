@@ -14,7 +14,6 @@
     "styled-components": "^3.2.3"
   },
   "scripts": {
-    "dev": "next",
     "copy:vendor": "mkdir -p static/vendor && cp -f node_modules/rainbow-code/dist/rainbow.min.js node_modules/rainbow-code/themes/css/solarized-light.css static/vendor",
     "prebuild": "npm run copy:vendor",
     "build": "next build && next export -o public",
