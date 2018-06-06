@@ -440,7 +440,7 @@ Both the minified and development versions ship with source maps for ease of deb
 ## more examples
 
 - holistic example + animated route transitions: <https://codesandbox.io/s/30llnkwj5q>
-- browser-only without a bundler: <https://codesandbox.io/s/p96j9159lq>
+- using Buttermilk, React, etc from CDN: <https://codesandbox.io/s/p96j9159lq>
 
 ## goals
 
