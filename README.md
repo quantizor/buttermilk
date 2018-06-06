@@ -429,15 +429,18 @@ ReactDOM.render(<Router routes={routes} outerComponent={App} />, root);
 You can also use consume Buttermilk from a CDN like unpkg:
 
 ```
-https://unpkg.com/buttermilk@1.1.0/dist/umd.js
-https://unpkg.com/buttermilk@1.1.0/dist/umd.min.js
+https://unpkg.com/buttermilk@1.1.1/dist/standalone.js
+https://unpkg.com/buttermilk@1.1.1/dist/standalone.min.js
 ```
 
 The exports will be accessible at `window.Buttermilk`. Note that this requires `react >= 16.3` (`window.React`) and `prop-types` (`window.PropTypes`) to also be accessible in the `window` scope.
 
+Both the minified and development versions ship with source maps for ease of debugging.
+
 ## more examples
 
 - holistic example + animated route transitions: <https://codesandbox.io/s/30llnkwj5q>
+- browser-only without a bundler: <https://codesandbox.io/s/p96j9159lq>
 
 ## goals
 

@@ -45,14 +45,14 @@ function generateConfig(overrides, minify = false, externalHelpers = false) {
 export default [
     generateConfig({
         output: {
-            file: 'dist/umd.js',
-            format: 'umd',
+            file: 'dist/standalone.js',
+            format: 'iife',
         }
     }),
     generateConfig({
         output: {
-            file: 'dist/umd.min.js',
-            format: 'umd',
+            file: 'dist/standalone.min.js',
+            format: 'iife',
         }
     }, true),
     generateConfig({
