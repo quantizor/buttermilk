@@ -12,7 +12,7 @@ module.exports =
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_styled_components__ = __webpack_require__("./node_modules/styled-components/dist/styled-components.browser.es.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Home__ = __webpack_require__("./components/Home.js");
-var _jsxFileName = "/Users/timneutkens/projects/buttermilk/site/components/App.js";
+var _jsxFileName = "/Users/bear/code/buttermilk/site/components/App.js";
 
 (function () {
   var enterModule = __webpack_require__("./node_modules/react-hot-loader/index.js").enterModule;
@@ -136,14 +136,14 @@ var _default = function _default() {
     return;
   }
 
-  reactHotLoader.register(App, "App", "/Users/timneutkens/projects/buttermilk/site/components/App.js");
-  reactHotLoader.register(desktop, "desktop", "/Users/timneutkens/projects/buttermilk/site/components/App.js");
-  reactHotLoader.register(Container, "Container", "/Users/timneutkens/projects/buttermilk/site/components/App.js");
-  reactHotLoader.register(Header, "Header", "/Users/timneutkens/projects/buttermilk/site/components/App.js");
-  reactHotLoader.register(Headline, "Headline", "/Users/timneutkens/projects/buttermilk/site/components/App.js");
-  reactHotLoader.register(Version, "Version", "/Users/timneutkens/projects/buttermilk/site/components/App.js");
-  reactHotLoader.register(Content, "Content", "/Users/timneutkens/projects/buttermilk/site/components/App.js");
-  reactHotLoader.register(_default, "default", "/Users/timneutkens/projects/buttermilk/site/components/App.js");
+  reactHotLoader.register(App, "App", "/Users/bear/code/buttermilk/site/components/App.js");
+  reactHotLoader.register(desktop, "desktop", "/Users/bear/code/buttermilk/site/components/App.js");
+  reactHotLoader.register(Container, "Container", "/Users/bear/code/buttermilk/site/components/App.js");
+  reactHotLoader.register(Header, "Header", "/Users/bear/code/buttermilk/site/components/App.js");
+  reactHotLoader.register(Headline, "Headline", "/Users/bear/code/buttermilk/site/components/App.js");
+  reactHotLoader.register(Version, "Version", "/Users/bear/code/buttermilk/site/components/App.js");
+  reactHotLoader.register(Content, "Content", "/Users/bear/code/buttermilk/site/components/App.js");
+  reactHotLoader.register(_default, "default", "/Users/bear/code/buttermilk/site/components/App.js");
   leaveModule(module);
 })();
 
@@ -164,7 +164,7 @@ var _default = function _default() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_styled_components__ = __webpack_require__("./node_modules/styled-components/dist/styled-components.browser.es.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_raw_loader_README_md__ = __webpack_require__("./node_modules/raw-loader/index.js!../README.md");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_raw_loader_README_md___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_raw_loader_README_md__);
-var _jsxFileName = "/Users/timneutkens/projects/buttermilk/site/components/Home.js";
+var _jsxFileName = "/Users/bear/code/buttermilk/site/components/Home.js";
 
 (function () {
   var enterModule = __webpack_require__("./node_modules/react-hot-loader/index.js").enterModule;
@@ -324,18 +324,18 @@ var Button = __WEBPACK_IMPORTED_MODULE_3_styled_components__["b" /* default */].
     return;
   }
 
-  reactHotLoader.register(navigation, "navigation", "/Users/timneutkens/projects/buttermilk/site/components/Home.js");
-  reactHotLoader.register(content, "content", "/Users/timneutkens/projects/buttermilk/site/components/Home.js");
-  reactHotLoader.register(Home, "Home", "/Users/timneutkens/projects/buttermilk/site/components/Home.js");
-  reactHotLoader.register(desktop, "desktop", "/Users/timneutkens/projects/buttermilk/site/components/Home.js");
-  reactHotLoader.register(mobile, "mobile", "/Users/timneutkens/projects/buttermilk/site/components/Home.js");
-  reactHotLoader.register(Wrapper, "Wrapper", "/Users/timneutkens/projects/buttermilk/site/components/Home.js");
-  reactHotLoader.register(Navigation, "Navigation", "/Users/timneutkens/projects/buttermilk/site/components/Home.js");
-  reactHotLoader.register(GithubLink, "GithubLink", "/Users/timneutkens/projects/buttermilk/site/components/Home.js");
-  reactHotLoader.register(GithubIconBase, "GithubIconBase", "/Users/timneutkens/projects/buttermilk/site/components/Home.js");
-  reactHotLoader.register(GithubIcon, "GithubIcon", "/Users/timneutkens/projects/buttermilk/site/components/Home.js");
-  reactHotLoader.register(Content, "Content", "/Users/timneutkens/projects/buttermilk/site/components/Home.js");
-  reactHotLoader.register(Button, "Button", "/Users/timneutkens/projects/buttermilk/site/components/Home.js");
+  reactHotLoader.register(navigation, "navigation", "/Users/bear/code/buttermilk/site/components/Home.js");
+  reactHotLoader.register(content, "content", "/Users/bear/code/buttermilk/site/components/Home.js");
+  reactHotLoader.register(Home, "Home", "/Users/bear/code/buttermilk/site/components/Home.js");
+  reactHotLoader.register(desktop, "desktop", "/Users/bear/code/buttermilk/site/components/Home.js");
+  reactHotLoader.register(mobile, "mobile", "/Users/bear/code/buttermilk/site/components/Home.js");
+  reactHotLoader.register(Wrapper, "Wrapper", "/Users/bear/code/buttermilk/site/components/Home.js");
+  reactHotLoader.register(Navigation, "Navigation", "/Users/bear/code/buttermilk/site/components/Home.js");
+  reactHotLoader.register(GithubLink, "GithubLink", "/Users/bear/code/buttermilk/site/components/Home.js");
+  reactHotLoader.register(GithubIconBase, "GithubIconBase", "/Users/bear/code/buttermilk/site/components/Home.js");
+  reactHotLoader.register(GithubIcon, "GithubIcon", "/Users/bear/code/buttermilk/site/components/Home.js");
+  reactHotLoader.register(Content, "Content", "/Users/bear/code/buttermilk/site/components/Home.js");
+  reactHotLoader.register(Button, "Button", "/Users/bear/code/buttermilk/site/components/Home.js");
   leaveModule(module);
 })();
 
@@ -9012,7 +9012,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react_dom__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_styled_components__ = __webpack_require__("./node_modules/styled-components/dist/styled-components.browser.es.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_App__ = __webpack_require__("./components/App.js");
-var _jsxFileName = "/Users/timneutkens/projects/buttermilk/site/pages/index.js";
+var _jsxFileName = "/Users/bear/code/buttermilk/site/pages/index.js";
 
 var _templateObject = /*#__PURE__*/ _taggedTemplateLiteral(["\n  html {\n    box-sizing: border-box;\n    color: #333;\n    font: 10px/1.35 'Karma', 'Georgia', serif;\n  }\n\n  html, body, #root {\n    height: 100%;\n    margin: 0;\n  }\n\n  h1 {\n    font-size: 2.4rem;\n    font-weight: 700;\n  }\n\n  h2 {\n    font-size: 2.2rem;\n    font-weight: 700;\n  }\n\n  h3 {\n    font-size: 2rem;\n    font-weight: 600;\n  }\n\n  h4 {\n    font-size: 1.8rem;\n  }\n\n  h5 {\n    font-size: 1.6rem;\n  }\n\n  h1, h2, h3, h4, h5 {\n    margin: 0 0 1em;\n\n    + h1, + h2, + h3, + h4, + h5 {\n      margin-top: -0.75em;\n    }\n  }\n\n  ul, ol, p, pre, table {\n    margin-bottom: 3rem;\n  }\n\n  ul {\n    padding: 0;\n    list-style-position: inside;\n\n    li p {\n      display: inline-block;\n      margin-top: 0;\n    }\n  }\n\n  h1 {\n    color: ", ";\n  }\n\n  a {\n    color: ", ";\n    transition: 300ms color ease;\n\n    &:hover {\n      color: ", ";\n    }\n  }\n\n  nav {\n    color: ", ";\n  }\n\n  pre, code {\n    animation: none !important;\n    background: ", ";\n    font-family: 'Overpass Mono', monospace;\n    opacity: 1 !important;\n  }\n\n  code {\n    font-size: 0.9em;\n    padding: 0 0.5rem;\n  }\n\n  pre {\n    background: ", ";\n    font-size: 1.3rem;\n    padding: 1rem 1.5rem;\n\n    code {\n      background: none !important;\n      display: block;\n      font-size: inherit;\n      overflow-wrap: normal;\n      overflow-x: auto;\n      padding: 0;\n      -webkit-overflow-scrolling: touch;\n    }\n  }\n\n  table {\n    th {\n      text-align: left;\n      text-decoration: underline;\n      padding-bottom: 1rem;\n    }\n\n    td {\n      padding-right: 2rem;\n    }\n  }\n\n  *, *::before, *::after {\n    box-sizing: inherit;\n  }\n"]);
 
@@ -9053,8 +9053,8 @@ var _default = function _default() {
     return;
   }
 
-  reactHotLoader.register(red, "red", "/Users/timneutkens/projects/buttermilk/site/pages/index.js");
-  reactHotLoader.register(_default, "default", "/Users/timneutkens/projects/buttermilk/site/pages/index.js");
+  reactHotLoader.register(red, "red", "/Users/bear/code/buttermilk/site/pages/index.js");
+  reactHotLoader.register(_default, "default", "/Users/bear/code/buttermilk/site/pages/index.js");
   leaveModule(module);
 })();
 
