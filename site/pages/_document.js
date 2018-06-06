@@ -1,4 +1,4 @@
-import Document, { Head, Main } from 'next/document';
+import Document, { Head, Main, NextScript } from 'next/document';
 import React from 'react';
 import { ServerStyleSheet } from 'styled-components';
 
@@ -42,6 +42,7 @@ export default class MyDocument extends Document {
 
                 <body>
                     <Main />
+                    <NextScript />
 
                     <script src="/static/vendor/rainbow.min.js"></script>
                     <script dangerouslySetInnerHTML={{ __html: Rainbow }} />
