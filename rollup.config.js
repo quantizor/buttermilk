@@ -11,7 +11,7 @@ function generateConfig(overrides, minify = false, externalHelpers = false) {
         input: 'src/index.js',
         output: {
             globals: { react: 'React', 'prop-types': 'PropTypes' },
-            name: 'buttermilk',
+            name: 'Buttermilk',
             sourcemap: true,
         },
         external: ['react', 'prop-types'],
