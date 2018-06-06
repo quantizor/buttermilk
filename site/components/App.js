@@ -3,12 +3,6 @@ import styled from 'styled-components';
 
 import Home from './Home';
 
-const VERSION = preval`
-  const pkg = require('../../package.json');
-
-  module.exports = pkg.version;
-`;
-
 class App extends Component {
   render() {
     return (

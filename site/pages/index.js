@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { injectGlobal } from 'styled-components';
 
-import App from './App';
+import App from '../components/App';
 
 const red = '#8a0000';
 
