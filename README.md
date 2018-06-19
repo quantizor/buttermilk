@@ -4,37 +4,38 @@
 
 <!-- TOC -->
 
-- [buttermilk](#buttermilk)
-    - [installation](#installation)
-    - [usage](#usage)
-        - [components](#components)
-            - [`<Router>`](#router)
-            - [`<RoutingState>`](#routingstate)
-            - [`<Link>`](#link)
-        - [utilities](#utilities)
-            - [`match(routes, url)`](#matchroutes-url)
-            - [`route()`](#route)
-        - [holistic example](#holistic-example)
-        - [without a bundler](#without-a-bundler)
-    - [more examples](#more-examples)
-    - [goals](#goals)
+-   [buttermilk](#buttermilk)
+    -   [installation](#installation)
+    -   [usage](#usage)
+        -   [basic example](#basic-example)
+        -   [writing route configurations](#writing-route-configurations)
+        -   [components](#components)
+            -   [`<Router>`](#router)
+            -   [`<RoutingState>`](#routingstate)
+            -   [`<Link>`](#link)
+        -   [utilities](#utilities)
+            -   [`match(routes, url)`](#matchroutes-url)
+            -   [`route()`](#route)
+        -   [holistic example](#holistic-example)
+        -   [without a bundler](#without-a-bundler)
+    -   [more examples](#more-examples)
+    -   [goals](#goals)
 
 <!-- /TOC -->
 
 ## installation
 
-Grab the `buttermilk` package with your favorite package manager.
+Grab the `buttermilk` NPM module with your favorite package manager.
 
 ```
 npm i buttermilk
-yarn add buttermilk
 ```
 
 ## usage
 
 Setting up `buttermilk` involves placing a `<Router>` component on your page and feeding it an array of route definitions. If you learn better by reverse engineering, check out the [holistic example](#holistic-example).
 
-A basic, starter setup:
+### basic example
 
 ```jsx
 import { Router } from 'buttermilk';
@@ -45,77 +46,108 @@ import FooPage from '../foo';
 import NotFoundPage from '../404';
 
 class App extends React.Component {
-  render() {
-    return (
-      <Router
-        routes={[
-          {
-            path: '/foo',
-            render: () => FooPage,
-          }, {
-            path: '*',
-            render: () => NotFoundPage,
-          }
-        ]}
-      />
-    );
-  }
+    render() {
+        return (
+            <Router
+                routes={[
+                    {
+                        path: '/foo',
+                        render: () => FooPage,
+                    },
+                    {
+                        path: '*',
+                        render: () => NotFoundPage,
+                    },
+                ]}
+            />
+        );
+    }
 }
 ```
+
+With the above setup, a URL like `"https://yoursite.com/foo"` would trigger the `FooPage` component to be rendered. All other paths would trigger the `NotFoundPage` component.
+
+### writing route configurations
 
 Buttermilk has a highly flexible matching system, offering the following flavors of routing:
 
-flavor | syntax
----    | ---
-static | `/foo`
-dynamic fragments | `/foo/:id`
-optional fragments | `/foo(/bar)`
-wildcard | `/foo*`
-fallback | `*`
-splat | `/foo/**/bar.html`
-functional | `yourValidationFunction(url)`
-regex | `^(?=bar)/foo`
-query string | `?foo=bar`
+| flavor             | syntax                        |
+| ------------------ | ----------------------------- |
+| static             | `"/foo"`                      |
+| dynamic fragments  | `"/foo/:id"`                  |
+| optional fragments | `"/foo(/bar)"`                |
+| wildcard           | `"/foo*"`                     |
+| splat              | `"/foo/**/bar.html"`          |
+| query string       | `"?foo=bar"`                  |
+| fallback           | `"*"`                         |
+| function callback  | `yourValidationFunction(url)` |
+| regex              | `/^(?=bar)\/foo/`             |
 
-The only hard rule is there must be a fallback route at the end of the routing chain: `path: '*'`. Otherwise, you are free to compose routes as it makes sense for your app.
+The only hard rule is there must be a fallback route at the end of the routing chain: `path: "*"`. Otherwise, you are free to compose routes as it makes sense for your app.
 
-A route configuration should have this shape:
+A route configuration can take two forms:
 
-```js
-{
-  path: String | RegExp | Function,
-  redirect: String?,
-  render: Function?,  // note that this is required if "redirect" is not passed
-}
-```
+-   A route that renders something:
 
-Return whatever you'd like from the `render` function. A few ideas:
+    ```js
+    {
+      path: String | RegExp | Function,
+      render: Function,
+    }
 
-- A React component class
+    // example
 
-  ```js
-  render: () => HelloWorldPage,
-  ```
+    {
+      path: "/",
+      render: () => "Hello world!",
+    }
+    ```
 
-- Some JSX
+    Return whatever you'd like from the `render` function. A few ideas:
 
-  ```jsx
-  render: () => <div>Hi!</div>,
-  ```
+    -   A React component class
 
-- A string
+        ```js
+        render: () => HelloWorldPage,
+        ```
 
-  ```js
-  render: () => 'Howdy!',
-  ```
+    -   Some JSX
 
-- A promise resolving to one of the above (great for async-loading pages)
+        ```jsx
+        render: () => <div>Hi!</div>,
+        ```
 
-  ```js
-  render: () => import('./HelloWorld').then(mdl => mdl.default),
-  ```
+    -   A string
 
-If it's a component class, Buttermilk will inject the [routing context](#routingstate) as props.
+        ```js
+        render: () => 'Howdy!',
+        ```
+
+    -   A promise resolving to one of the above (great for loading pages on-demand and reducing initial bundle size)
+
+        ```js
+        render: () => import('./HelloWorld').then(mdl => mdl.default),
+        ```
+
+    If it's a component class, Buttermilk will inject the [routing context](#routingstate) as props.
+
+-   A route that redirects to another path:
+
+    ```js
+    {
+      path: String | RegExp | Function,
+      redirect: String,
+    }
+
+    // example
+
+    {
+      path: "/bar",
+      redirect: "/",
+    }
+    ```
+
+You may also pass any other properties you'd like inside the route configuration object and they will be available to the `RoutingState` higher-order component, routing callbacks, etc.
 
 ### components
 
@@ -123,7 +155,7 @@ If it's a component class, Buttermilk will inject the [routing context](#routing
 
 The gist of Buttermilk's router is that it acts like a controlled component when used server-side (driven by `props.url`) and an uncontrolled one client-side (driven by the value of `window.location.href` and intercepted navigation events.)
 
-In the browser, use either a `<Link>` component or the `route()` utility method to change routes. The router will also automatically pick up popstate events caused by user-driven browser navigation (forward, back buttons, etc.)
+In the browser, use either a `<Link>` component or the `route()` utility method to change routes. The router will also automatically pick up `popstate` events caused by user-driven browser navigation (forward, back buttons, etc.)
 
 Available props:
 
@@ -138,9 +170,10 @@ loadingComponent: PropTypes.oneOfType([
 ]),
 
 /**
- * An optional app runtime component. Think of it like the "shell" of your
- * app, so perhaps the outer container, nav bar, etc. You'll probably want to
- * put any "Provider" type components here that are intended to wrap your
+ * An optional app runtime component. Think of it like
+ * the "shell" of your app, so perhaps the outer container,
+ * nav bar, etc. You'll probably want to put any "Provider"
+ * type components here that are intended to wrap your
  * whole application.
  */
 outerComponent: PropTypes.oneOfType([
@@ -179,17 +212,19 @@ routes: PropTypes.arrayOf(
 ).isRequired,
 
 /**
- * A hook for reacting to an impending route transition. Accepts a promise
- * and will pause the route transition until the promise is resolved. Return
- * false or reject a given promise to abort the routing update.
+ * A hook for reacting to an impending route transition.
+ * Accepts a promise and will pause the route transition
+ * until the promise is resolved. Return false or reject
+ * a given promise to abort the routing update.
  *
  * Provides currentRouting and nextRouting as arguments.
  */
 routeWillChange: PropTypes.func,
 
 /**
- * A hook for reacting to a completed route transition. It might be used
- * for synchronizing some global state if desired.
+ * A hook for reacting to a completed route transition. It
+ * might be used for synchronizing some global state if
+ * desired.
  *
  * Provides currentRouting and previousRouting as arguments.
  */
@@ -204,31 +239,40 @@ routerDidInitialize: PropTypes.func,
 
 /**
  * The initial URL to be used for processing, falls back to
- * window.location.href for non-SSR. Required for environments without
- * browser navigation eventing.
+ * window.location.href for non-SSR. Required for
+ * environments without browser navigation eventing, like Node.
  */
-url: PropTypes.string
+url: PropTypes.string,
 ```
 
 #### `<RoutingState>`
 
-A render prop higher order component (HOC) for arbitrarily-consuming routing state.
+A render prop higher-order component (HOC) for arbitrarily consuming routing state.
 
 ```jsx
 <RoutingState>
-  {routingProps => {
-    // routingProps.location  (the parsed current URL in window.location.* form)
-    // routingProps.params    (any extracted dynamic params from the URL)
-    // routingProps.route     (the current route)
+    {routingProps => {
+        // routingProps.location
+        // (the parsed current URL in window.location.* form)
 
-    return /* some JSX */;
-  }}
+        // routingProps.params
+        // (any extracted dynamic params from the URL)
+
+        // routingProps.route
+        // (the current route)
+
+        return /* some JSX */;
+    }}
 </RoutingState>
 ```
 
 #### `<Link>`
 
-A polymorphic anchor link component. On click/tap/enter if the destination matches a value route, the routing context will be modified without reloading the page. Otherwise, it will act like a normal anchor link.
+A polymorphic anchor link component. On click/tap/enter if the destination matches a valid route, the routing context will be modified and the URL updated without reloading the page. Otherwise, it will act like a normal anchor link.
+
+> A _polymorphic_ component is one that can change shape as part of its public API. In the case of `<Link>`, `props.as` allows the developer to pass in their own base link component if desired.
+>
+> This might make sense if you use a library like [styled-components](https://www.styled-components.com/) and want to make a shared, styled anchor link component.
 
 If something other than an anchor tag is specified via `props.as`, a `[role="link"]` attribute will be added for basic assistive technology support.
 
@@ -236,7 +280,7 @@ Adds `[data-active]` if the given href matches the active route.
 
 ```jsx
 <Link as="button" href="/somewhere" target="_blank">
-  Somewhere over the rainbow…
+    Somewhere over the rainbow…
 </Link>
 ```
 
@@ -244,8 +288,8 @@ Available props:
 
 ```js
 /**
- * An HTML tag name or valid ReactComponent class to be rendered. Must
- * be compatible with React.createElement.
+ * An HTML tag name or valid ReactComponent class to
+ * be rendered. Must be compatible with React.createElement.
  *
  * Defaults to an anchor "a" tag.
  */
@@ -269,6 +313,21 @@ href: PropTypes.string.isRequired,
 target: PropTypes.string,
 ```
 
+An example using a styled-components element base:
+
+```js
+import { Link } from 'buttermilk';
+import styled from 'styled-components';
+
+const Anchor = styled.a`
+    color: red;
+`;
+
+export default function StyledButtermilkLink(props) {
+    return <Link {...props} as={Anchor} />;
+}
+```
+
 ### utilities
 
 #### `match(routes, url)`
@@ -280,16 +339,20 @@ import { match } from 'buttermilk';
 
 const url = 'https://fizz.com/buzz';
 
-const routes = [{
-  path: '/foo',
-  render: () => FooPage,
-}, {
-  path: '/bar',
-  render: () => BarPage,
-}, {
-  path: '*',
-  render: () => NotFoundPage,
-}];
+const routes = [
+    {
+        path: '/foo',
+        render: () => FooPage,
+    },
+    {
+        path: '/bar',
+        render: () => BarPage,
+    },
+    {
+        path: '*',
+        render: () => NotFoundPage,
+    },
+];
 
 const { location, params, redirect, route } = match(routes, url);
 ```
@@ -307,27 +370,29 @@ import routes from '../routes';
  * An example express middleware.
  */
 export default function renderingMiddleware(req, res, next) {
-  const url = req.protocol + '//' + req.get('host') + req.originalUrl;
+    const url = req.protocol + '//' + req.get('host') + req.originalUrl;
 
-  const { location, params, redirect, route } = match(routes, url);
+    const { location, params, redirect, route } = match(routes, url);
 
-  if (redirect) return res.redirect(redirect);
+    if (redirect) return res.redirect(redirect);
 
-  const html = ReactDOMServer.renderToString(
-    <Router
-      url={url}
-      routes={[{
-        ...route,
-        path: '*',
-      }]}
-    />
-  );
+    const html = ReactDOMServer.renderToString(
+        <Router
+            url={url}
+            routes={[
+                {
+                    ...route,
+                    path: '*',
+                },
+            ]}
+        />,
+    );
 
-  /**
-   * route.title below is an example arbitrary prop you could add to the
-   * route definition if desired
-   */
-  res.send(`
+    /**
+     * route.title below is an example arbitrary prop
+     * you could add to the route configuration if desired
+     */
+    res.send(`
     <!doctype html>
     <html>
       <head><title>${route.title}</title></head>
@@ -353,73 +418,73 @@ See it live: <https://codesandbox.io/s/20q311nn6n>
 
 ```jsx
 /* Home.js */
-export default () => "Home";
+export default () => 'Home';
 
 /* index.js */
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import { Router, RoutingState, Link } from "buttermilk";
+import { Router, RoutingState, Link } from 'buttermilk';
 
 const App = props => (
-  <div>
-    <header>
-      <h1>My sweet website</h1>
-    </header>
+    <div>
+        <header>
+            <h1>My sweet website</h1>
+        </header>
 
-    <nav>
-      <Link href="/">Home</Link>
-      <Link href="/blep/kitter">Kitter Blep!</Link>
-      <Link href="/blep/corg">Corg Blep!</Link>
-    </nav>
+        <nav>
+            <Link href="/">Home</Link>
+            <Link href="/blep/kitter">Kitter Blep!</Link>
+            <Link href="/blep/corg">Corg Blep!</Link>
+        </nav>
 
-    <main>{props.children}</main>
-  </div>
+        <main>{props.children}</main>
+    </div>
 );
 
 const NotFound = () => (
-  <div>
-    <h2>Oh noes, a 404 page!</h2>
-    <RoutingState>
-      {routing => (
-        <p>
-          No page was found with the path:
-          <code>{routing.location.pathname}</code>
-        </p>
-      )}
-    </RoutingState>
+    <div>
+        <h2>Oh noes, a 404 page!</h2>
+        <RoutingState>
+            {routing => (
+                <p>
+                    No page was found with the path:
+                    <code>{routing.location.pathname}</code>
+                </p>
+            )}
+        </RoutingState>
 
-    <p>
-      <Link href="/">Let's go back home.</Link>
-    </p>
-  </div>
+        <p>
+            <Link href="/">Let's go back home.</Link>
+        </p>
+    </div>
 );
 
 const routes = [
-  {
-    path: "/",
-    render: () => import("./Home").then(mdl => mdl.default),
-  },
-  {
-    path: "/blep/:animal",
-    render: routing => (
-      <img
-        alt="Bleppin'"
-        src={
-          routing.params.animal === "corg"
-            ? "http://static.damnlol.com/media/bc42fc943ada24176298871de477e0c6.jpg"
-            : "https://i.imgur.com/OvbGwwI.jpg"
-        }
-      />
-    ),
-  },
-  {
-    path: "*",
-    render: () => NotFound,
-  },
+    {
+        path: '/',
+        render: () => import('./Home').then(mdl => mdl.default),
+    },
+    {
+        path: '/blep/:animal',
+        render: routing => (
+            <img
+                alt="Bleppin'"
+                src={
+                    routing.params.animal === 'corg'
+                        ? 'http://static.damnlol.com/media/bc42fc943ada24176298871de477e0c6.jpg'
+                        : 'https://i.imgur.com/OvbGwwI.jpg'
+                }
+            />
+        ),
+    },
+    {
+        path: '*',
+        render: () => NotFound,
+    },
 ];
 
-const root = document.body.appendChild(document.createElement("div"));
+const root = document.body.appendChild(document.createElement('div'));
 
 ReactDOM.render(<Router routes={routes} outerComponent={App} />, root);
 ```
@@ -439,15 +504,15 @@ Both the minified and development versions ship with source maps for ease of deb
 
 ## more examples
 
-- holistic example + animated route transitions: <https://codesandbox.io/s/30llnkwj5q>
-- using Buttermilk, React, etc from CDN: <https://codesandbox.io/s/p96j9159lq>
+-   holistic example + animated route transitions: <https://codesandbox.io/s/30llnkwj5q>
+-   using Buttermilk, React, etc from CDN: <https://codesandbox.io/s/p96j9159lq>
 
 ## goals
 
-- centrally-managed routing
-- fast
-- first-class async support
-- HMR-friendly
-- obvious API
-- small
-- SSR
+-   centrally-managed routing
+-   fast
+-   first-class async support
+-   HMR-friendly
+-   obvious API
+-   small
+-   SSR
