@@ -66,6 +66,11 @@ export default class MyDocument extends Document {
                         rel="stylesheet"
                     />
 
+                    <meta
+                        name="google-site-verification"
+                        content="P3Pt81s1_rvAzz4ZOv9xzwP64sTYIjndr3HjgJavNPw"
+                    />
+
                     <script
                         async
                         src="https://www.googletagmanager.com/gtag/js?id=UA-91833843-2"
