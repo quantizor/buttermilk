@@ -3,12 +3,14 @@ import regexify from './regexify';
 
 const PATH_EXTRACTION_R = /:[^/?#()]*/g;
 
-export function extractParamsFromPath(path) {
-    return (
-        path.match(PATH_EXTRACTION_R) || []
+const isString = x => typeof x === 'string';
 
-        // remove the leading colon
-    ).map(param => param.slice(1));
+export function extractParamsFromPath(path) {
+    return isString(path)
+        ? (path.match(PATH_EXTRACTION_R) || [])
+              // remove the leading colon
+              .map(param => param.slice(1))
+        : [];
 }
 
 export function getRouteParamsForURL(route, url) {
@@ -26,7 +28,7 @@ export function getRouteParamsForURL(route, url) {
 export function processRoute(route) {
     return Object.assign({}, route, {
         params: extractParamsFromPath(route.path),
-        test: regexify(route.path),
+        test: isString(route.path) ? regexify(route.path) : route.path,
     });
 }
 
@@ -55,11 +57,14 @@ export function findRoute(routes, url) {
     const route = routes.find(route => valid(route.test, url));
 
     if (route) {
-        if (route.redirect) return findRoute(routes, getRedirectUrl(route.redirect, url));
+        if (route.redirect)
+            return findRoute(routes, getRedirectUrl(route.redirect, url));
         else return { route, url };
     }
 
-    throw new Error(`No valid routes were found for URL ${url}. Did you forget to define a fallback "*" path?`);
+    throw new Error(
+        `No valid routes were found for URL ${url}. Did you forget to define a fallback "*" path?`,
+    );
 }
 
 export function getDisplayName(Component) {
@@ -69,15 +74,18 @@ export function getDisplayName(Component) {
 export function parseUrl(url) {
     const parsed = new LiteURL(url);
 
-    parsed.query = parsed.search.slice(1).split('&').reduce((params, pair) => {
-        if (pair) {
-            const idx = pair.indexOf('=');
+    parsed.query = parsed.search
+        .slice(1)
+        .split('&')
+        .reduce((params, pair) => {
+            if (pair) {
+                const idx = pair.indexOf('=');
 
-            params[pair.slice(0, idx)] = pair.slice(idx + 1);
-        }
+                params[pair.slice(0, idx)] = pair.slice(idx + 1);
+            }
 
-        return params;
-    }, {});
+            return params;
+        }, {});
 
     return parsed;
 }

@@ -25,40 +25,45 @@ describe('findRoute(Object[], URLString)', () => {
     });
 
     it('returns the correct route', () => {
-        expect(utils.findRoute(routes, 'https://fizz.com/foo')).toEqual({ route: routes[0], url: 'https://fizz.com/foo' });
+        expect(utils.findRoute(routes, 'https://fizz.com/foo')).toEqual({
+            route: routes[0],
+            url: 'https://fizz.com/foo',
+        });
     });
 
     it('throws if a route is not found', () => {
-        expect(() => utils.findRoute(routes, 'https://fizz.com/fizz')).toThrowError();
+        expect(() =>
+            utils.findRoute(routes, 'https://fizz.com/fizz'),
+        ).toThrowError();
     });
 
     it('handles redirects if the matched route contains one', () => {
-        expect(utils.findRoute(routes, 'https://fizz.com/baz')).toEqual({ route: routes[1], url: 'https://fizz.com/bar' });
+        expect(utils.findRoute(routes, 'https://fizz.com/baz')).toEqual({
+            route: routes[1],
+            url: 'https://fizz.com/bar',
+        });
     });
 
     it('returns the wildcard route if no other routes match', () => {
         routes.push({ test: regexify('*') });
 
-        expect(utils.findRoute(routes, 'https://fizz.com/fizz')).toEqual({ route: routes[3], url: 'https://fizz.com/fizz' });
+        expect(utils.findRoute(routes, 'https://fizz.com/fizz')).toEqual({
+            route: routes[3],
+            url: 'https://fizz.com/fizz',
+        });
     });
 });
 
 describe('extractParamsFromPath(URLString)', () => {
     it('returns an array of params', () => {
         expect(utils.extractParamsFromPath('/:foo/:bar')).toEqual(
-            expect.arrayContaining([
-                'foo',
-                'bar',
-            ])
+            expect.arrayContaining(['foo', 'bar']),
         );
     });
 
     it('handles optional params', () => {
         expect(utils.extractParamsFromPath('/:foo(/:bar)')).toEqual(
-            expect.arrayContaining([
-                'foo',
-                'bar',
-            ])
+            expect.arrayContaining(['foo', 'bar']),
         );
     });
 
@@ -69,7 +74,9 @@ describe('extractParamsFromPath(URLString)', () => {
 
 describe('parseUrl(URLString)', () => {
     expect(
-        utils.parseUrl('https://evan:password@google.com:8080/yar?foo=bar&yah=nah#nah')
+        utils.parseUrl(
+            'https://evan:password@google.com:8080/yar?foo=bar&yah=nah#nah',
+        ),
     ).toMatchObject({
         hash: '#nah',
         host: 'google.com:8080',
@@ -91,17 +98,22 @@ describe('parseUrl(URLString)', () => {
 
 describe('getRouteParamsForURL(Object, URLString)', () => {
     it('returns an empty object if the route has no params', () => {
-        expect(utils.getRouteParamsForURL({ params: [] }, 'https://fizz.com/foo')).toEqual({});
+        expect(
+            utils.getRouteParamsForURL({ params: [] }, 'https://fizz.com/foo'),
+        ).toEqual({});
     });
 
     it('returns a hash of the route params', () => {
         const path = '/foo(/:bar)/:baz';
 
         expect(
-            utils.getRouteParamsForURL({
-                params: utils.extractParamsFromPath(path),
-                test: regexify(path),
-            }, 'https://fizz.com/foo/baz/buzz')
+            utils.getRouteParamsForURL(
+                {
+                    params: utils.extractParamsFromPath(path),
+                    test: regexify(path),
+                },
+                'https://fizz.com/foo/baz/buzz',
+            ),
         ).toMatchObject({
             bar: 'baz',
             baz: 'buzz',
@@ -112,10 +124,13 @@ describe('getRouteParamsForURL(Object, URLString)', () => {
         const path = '/foo(/:bar)/:baz';
 
         expect(
-            utils.getRouteParamsForURL({
-                params: utils.extractParamsFromPath(path),
-                test: regexify(path),
-            }, 'https://fizz.com/foo/buzz')
+            utils.getRouteParamsForURL(
+                {
+                    params: utils.extractParamsFromPath(path),
+                    test: regexify(path),
+                },
+                'https://fizz.com/foo/buzz',
+            ),
         ).toMatchObject({
             baz: 'buzz',
         });
@@ -124,23 +139,19 @@ describe('getRouteParamsForURL(Object, URLString)', () => {
 
 describe('route(URLString, Boolean?)', () => {
     beforeEach(() => {
-        jest.spyOn(window, 'dispatchEvent').mockImplementation(() => { });
-        jest.spyOn(history, 'pushState').mockImplementation(() => { });
-        jest.spyOn(history, 'replaceState').mockImplementation(() => { });
+        jest.spyOn(window, 'dispatchEvent').mockImplementation(() => {});
+        jest.spyOn(history, 'pushState').mockImplementation(() => {});
+        jest.spyOn(history, 'replaceState').mockImplementation(() => {});
     });
 
     it('uses pushState by default to change the URL', () => {
         utils.route('/foo');
-        expect(history.pushState).toHaveBeenCalledWith(
-            {}, '', '/foo'
-        );
+        expect(history.pushState).toHaveBeenCalledWith({}, '', '/foo');
     });
 
     it('uses replaceState if the second argument is false', () => {
         utils.route('/foo', false);
-        expect(history.replaceState).toHaveBeenCalledWith(
-            {}, '', '/foo'
-        );
+        expect(history.replaceState).toHaveBeenCalledWith({}, '', '/foo');
     });
 
     it('ultimately dispatches a popstate event', () => {
@@ -188,7 +199,35 @@ describe('match(Object[], URLString)', () => {
             params: {
                 id: '1',
             },
-            redirect: 'https://baz.com/foo/1'
+            redirect: 'https://baz.com/foo/1',
+        });
+    });
+
+    it('works with a regex route', () => {
+        routes = [{ path: /\/[a-z]+$/i }, { path: /\/\d+$/ }, { path: '*' }];
+
+        expect(utils.match(routes, 'https://baz.com/123')).toEqual({
+            route: expect.objectContaining(routes[1]),
+            location: expect.objectContaining({
+                pathname: '/123',
+            }),
+            params: {},
+        });
+    });
+
+    it('works with a function route', () => {
+        routes = [
+            { path: url => url.endsWith('2') },
+            { path: url => url.endsWith('3') },
+            { path: '*' },
+        ];
+
+        expect(utils.match(routes, 'https://baz.com/123')).toEqual({
+            route: expect.objectContaining(routes[1]),
+            location: expect.objectContaining({
+                pathname: '/123',
+            }),
+            params: {},
         });
     });
 });
