@@ -54,7 +54,7 @@
   },
   "bundlesize": [
     {
-      "path": "./dist/umd.min.js",
+      "path": "./dist/standalone.min.js",
       "maxSize": "5 kB"
     }
   ]
