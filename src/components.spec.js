@@ -30,6 +30,24 @@ describe('Router', () => {
     expect(root.innerHTML).toContain('bar');
   });
 
+  it('renders the correct route with a home route also present', () => {
+    render({
+      routes: [
+        {
+          path: '/',
+          render: () => <div>Home</div>,
+        },
+        {
+          path: '/foo',
+          render: () => <div>bar</div>,
+        },
+      ],
+      url: 'http://foo.com/foo',
+    });
+
+    expect(root.innerHTML).toContain('bar');
+  });
+
   it('renders a child component class with the current routing state', () => {
     class Foo extends React.Component {
       render() {
