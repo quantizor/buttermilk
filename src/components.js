@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Suspense, useContext, useEffect, useMemo, useState } from 'react';
+import { isLazy } from 'react-is';
 import { createRouteContext, findRoute, processRoute, route, valid } from './utils';
 
 const ButtermilkContext = React.createContext();
@@ -24,9 +25,7 @@ export function Router(props) {
   // this is entirely derived from props so useMemo works fine
   const routes = useMemo(() => processRoutes(props.routes), [props.routes]);
 
-  const [routingState, updateRoutingState] = useState(
-    getStateUpdateForUrl(routes, props.url || window.location.href, null)
-  );
+  const [routingState, updateRoutingState] = useState(getStateUpdateForUrl(routes, _getUrl(props), null));
 
   // an internal redirect may happen in getStateUpdateForUrl -> findRoute, so we'll use the final returned url
   const [url, updateUrl] = useState(routingState.url);
@@ -74,13 +73,12 @@ export function Router(props) {
   }, [routingState.routingProps.route, routingState.routingProps.location]);
 
   const Renderable = routingState.children;
+  const children = !React.isValidElement(Renderable) ? <Renderable {...routingState.routingProps} /> : Renderable;
 
   return (
     <ButtermilkContext.Provider value={routingState.routingProps}>
       <props.outerComponent {...routingState.routingProps}>
-        <Suspense fallback={<props.loadingComponent />}>
-          {!React.isValidElement(Renderable) ? <Renderable {...routingState.routingProps} /> : Renderable}
-        </Suspense>
+        {isLazy(Renderable) ? <Suspense fallback={<props.loadingComponent />}>{children}</Suspense> : children}
       </props.outerComponent>
     </ButtermilkContext.Provider>
   );
@@ -167,6 +165,11 @@ Router.defaultProps = {
   url: '',
 };
 
+// just for testing
+export function _getUrl(props = {}) {
+  return props.url || window.location.href;
+}
+
 function getStateUpdateForUrl(routes, url, prevRoutingProps) {
   const result = findRoute(routes, url);
   const nextRoutingProps = createRouteContext(result.route, result.url);
@@ -185,7 +188,7 @@ function processRoutes(routes) {
   if (process.env.NODE_ENV !== 'production') {
     if (!noFallbackWarningEmitted && routes.every(route => route.path !== '*')) {
       console.warn('no fallback route "*" was supplied. if a matching route is not found, the router will throw');
-      noFallbackWarning = true;
+      noFallbackWarningEmitted = true;
     }
   }
 
