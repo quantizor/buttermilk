@@ -40,10 +40,10 @@ const NotFound = () => (
 );
 
 const routes = [
-  // {
-  //   path: '/',
-  //   render: () => import('./home').then(mdl => mdl.default),
-  // },
+  {
+    path: '/',
+    render: () => React.lazy(() => import('./home')),
+  },
   {
     path: '/blep/:animal',
     render: routing => (

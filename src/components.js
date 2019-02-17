@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Suspense, useContext, useEffect, useState } from 'react';
+import React, { Suspense, useContext, useEffect, useMemo, useState } from 'react';
 import { createRouteContext, findRoute, processRoute, route, valid } from './utils';
 
 const ButtermilkContext = React.createContext();
@@ -21,18 +21,25 @@ export function Router(props) {
     throw new Error('props.url is required for non-browser environments');
   }
 
-  const url = props.url || window.location.href;
+  // this is entirely derived from props so useMemo works fine
+  const routes = useMemo(() => processRoutes(props.routes), [props.routes]);
 
-  const [_, update] = useState(0);
-  const [routes, updateRoutes] = useState(processRoutes(props.routes));
-  const [routingState, updateRoutingState] = useState(getStateUpdateForUrl(routes, url, null));
-  const contextValue = createRouteContext(routingState.activeRoute, routingState.url);
+  const [routingState, updateRoutingState] = useState(
+    getStateUpdateForUrl(routes, props.url || window.location.href, null)
+  );
+
+  // an internal redirect may happen in getStateUpdateForUrl -> findRoute, so we'll use the final returned url
+  const [url, updateUrl] = useState(routingState.url);
+
+  // this effect triggers the update flow in a controlled Router or SSR use case
+  useEffect(() => updateUrl(props.url || routingState.url), [props.url]);
 
   useEffect(() => {
-    props.routerDidInitialize(contextValue);
+    props.routerDidInitialize(routingState.routingProps);
 
     function handleLocationChange() {
-      update(Math.random());
+      // in controlled mode, ignore page events
+      if (!props.url) updateUrl(window.location.href);
     }
 
     window.addEventListener('popstate', handleLocationChange);
@@ -45,32 +52,34 @@ export function Router(props) {
   }, []);
 
   useEffect(() => {
-    updateRoutes(processRoutes(props.routes));
-  }, [props.routes]);
-
-  useEffect(() => {
     const { route: nextRoute, url: nextUrl } = findRoute(routes, url);
 
-    const nextValue = createRouteContext(nextRoute, nextUrl);
-    const result = props.routeWillChange(contextValue, nextValue);
-    const finish = () => updateRoutingState(getStateUpdateForUrl(routes, nextUrl, contextValue));
+    if (nextRoute !== routingState.activeRoute || nextUrl !== routingState.url) {
+      const nextRoutingProps = createRouteContext(nextRoute, nextUrl);
+      const result = props.routeWillChange(routingState.routingProps, nextRoutingProps);
 
-    if (result === false) return;
-    else if (result instanceof Promise) result.then(finish, NOOP);
-    else finish();
+      const finish = () => {
+        updateRoutingState(getStateUpdateForUrl(routes, nextUrl, routingState.routingProps));
+        updateUrl(nextUrl);
+      };
+
+      if (result === false) return;
+      else if (result instanceof Promise) result.then(finish, NOOP);
+      else finish();
+    }
   }, [routes, url]);
 
   useEffect(() => {
-    if (routingState.previousState) props.routeDidChange(contextValue, routingState.previousState);
-  }, [contextValue.route, contextValue.location.pathname, contextValue.location.hash]);
+    if (routingState.prevRoutingProps) props.routeDidChange(routingState.routingProps, routingState.prevRoutingProps);
+  }, [routingState.routingProps.route, routingState.routingProps.location]);
 
   const Renderable = routingState.children;
 
   return (
-    <ButtermilkContext.Provider value={contextValue}>
-      <props.outerComponent {...contextValue}>
+    <ButtermilkContext.Provider value={routingState.routingProps}>
+      <props.outerComponent {...routingState.routingProps}>
         <Suspense fallback={<props.loadingComponent />}>
-          {!React.isValidElement(Renderable) ? <Renderable {...contextValue} /> : Renderable}
+          {!React.isValidElement(Renderable) ? <Renderable {...routingState.routingProps} /> : Renderable}
         </Suspense>
       </props.outerComponent>
     </ButtermilkContext.Provider>
@@ -158,22 +167,16 @@ Router.defaultProps = {
   url: '',
 };
 
-function processChildren(unknown) {
-  if (unknown instanceof Promise) {
-    return React.lazy(unknown);
-  } else {
-    return unknown;
-  }
-}
-
-function getStateUpdateForUrl(routes, url, previousState) {
+function getStateUpdateForUrl(routes, url, prevRoutingProps) {
   const result = findRoute(routes, url);
+  const nextRoutingProps = createRouteContext(result.route, result.url);
 
   return {
     activeRoute: result.route,
-    children: processChildren(result.route.render(createRouteContext(result.route, result.url))),
-    previousState,
+    children: result.route.render(nextRoutingProps),
+    prevRoutingProps,
     routes,
+    routingProps: nextRoutingProps,
     url: result.url,
   };
 }
