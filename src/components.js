@@ -25,7 +25,9 @@ export function Router(props) {
   // this is entirely derived from props so useMemo works fine
   const routes = useMemo(() => processRoutes(props.routes), [props.routes]);
 
-  const [routingState, updateRoutingState] = useState(getStateUpdateForUrl(routes, _getUrl(props), null));
+  const [routingState, updateRoutingState] = useState(
+    getStateUpdateForUrl(routes, props.url || window.location.href, null)
+  );
 
   // an internal redirect may happen in getStateUpdateForUrl -> findRoute, so we'll use the final returned url
   const [url, updateUrl] = useState(routingState.url);
@@ -37,8 +39,7 @@ export function Router(props) {
     props.routerDidInitialize(routingState.routingProps);
 
     function handleLocationChange() {
-      // in controlled mode, ignore page events
-      if (!props.url) updateUrl(window.location.href);
+      updateUrl(window.location.href);
     }
 
     window.addEventListener('popstate', handleLocationChange);
@@ -164,11 +165,6 @@ Router.defaultProps = {
   routerDidInitialize: NOOP,
   url: '',
 };
-
-// just for testing
-export function _getUrl(props = {}) {
-  return props.url || window.location.href;
-}
 
 function getStateUpdateForUrl(routes, url, prevRoutingProps) {
   const result = findRoute(routes, url);
