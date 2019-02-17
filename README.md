@@ -123,7 +123,7 @@ A route configuration can take two forms:
     render: () => 'Howdy!',
     ```
 
-  - A `React.lazy`-wrapped dynamically-improted component
+  - A `React.lazy`-wrapped dynamically-imported component
 
     ```js
     render: () => React.lazy(() => import('./HelloWorld')),
