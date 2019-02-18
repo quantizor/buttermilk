@@ -1,19 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ReactDOM from 'react-dom';
-import { Simulate } from 'react-dom/test-utils';
-
-import { Link, Router, RoutingState } from './components';
+import { act, Simulate } from 'react-dom/test-utils';
+import * as lib from './components';
 import { route } from './utils';
 
 let root;
 const render = ({ url, ...props }) => {
-  jest.spyOn(Router, 'getURL').mockImplementation(() => url);
-  ReactDOM.render(<Router {...props} />, root);
+  jsdom.reconfigure({ url });
+
+  act(() => {
+    ReactDOM.render(<lib.Router {...props} />, root);
+  });
 };
 
 beforeAll(() => document.body.appendChild((root = document.createElement('main'))));
 beforeEach(() => jest.spyOn(console, 'warn').mockImplementation(() => {}));
 afterEach(() => ReactDOM.unmountComponentAtNode(root));
+
+const updateJSDOMUrl = (url, eventType) => {
+  act(() => {
+    window.history.pushState({}, null, url);
+    window.dispatchEvent(new Event(eventType));
+  });
+};
 
 describe('Router', () => {
   it('renders a simple element child', () => {
@@ -22,6 +31,10 @@ describe('Router', () => {
         {
           path: '/foo',
           render: () => <div>bar</div>,
+        },
+        {
+          path: '*',
+          render: () => <div>oh well</div>,
         },
       ],
       url: 'http://foo.com/foo',
@@ -40,6 +53,10 @@ describe('Router', () => {
         {
           path: '/foo',
           render: () => <div>bar</div>,
+        },
+        {
+          path: '*',
+          render: () => <div>oh well</div>,
         },
       ],
       url: 'http://foo.com/foo',
@@ -60,6 +77,10 @@ describe('Router', () => {
         {
           path: '/foo',
           render: () => Foo,
+        },
+        {
+          path: '*',
+          render: () => <div>oh well</div>,
         },
       ],
       url: 'http://foo.com/foo',
@@ -108,7 +129,7 @@ describe('Router', () => {
   });
 
   it('handles popstate events', () => {
-    const instance = render({
+    render({
       routes: [
         {
           path: '/foo',
@@ -124,8 +145,7 @@ describe('Router', () => {
 
     expect(root.innerHTML).toContain('bar');
 
-    Router.getURL.mockImplementation(() => 'http://foo.com/bar');
-    window.dispatchEvent(new Event('popstate'));
+    updateJSDOMUrl('http://foo.com/bar', 'popstate');
 
     expect(root.innerHTML).toContain('oh well');
   });
@@ -147,8 +167,7 @@ describe('Router', () => {
 
     expect(root.innerHTML).toContain('bar');
 
-    Router.getURL.mockImplementation(() => 'http://foo.com/');
-    window.dispatchEvent(new Event('hashchange'));
+    updateJSDOMUrl('http://foo.com/', 'hashchange');
 
     expect(root.innerHTML).toContain('oh well');
   });
@@ -174,8 +193,10 @@ describe('Router', () => {
 
     expect(root.innerHTML).toContain('bar');
 
-    Router.getURL.mockImplementation(() => 'http://foo.com/bar');
-    route('/bar');
+    act(() => {
+      history.pushState({}, null, 'http://foo.com/bar');
+      route('/bar');
+    });
 
     expect(root.innerHTML).toContain('baz');
   });
@@ -230,8 +251,7 @@ describe('Router', () => {
         url: 'http://foo.com/bar',
       });
 
-      Router.getURL.mockImplementation(() => 'http://foo.com/');
-      window.dispatchEvent(new Event('popstate'));
+      updateJSDOMUrl('http://foo.com/', 'popstate');
 
       expect(stub).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -267,8 +287,7 @@ describe('Router', () => {
         url: 'http://foo.com/bar',
       });
 
-      Router.getURL.mockImplementation(() => 'http://foo.com/');
-      await window.dispatchEvent(new Event('popstate'));
+      await updateJSDOMUrl('http://foo.com/', 'popstate');
 
       expect(stub).toHaveBeenCalled();
     });
@@ -292,8 +311,7 @@ describe('Router', () => {
         url: 'http://foo.com/bar',
       });
 
-      Router.getURL.mockImplementation(() => 'http://foo.com/');
-      window.dispatchEvent(new Event('popstate'));
+      updateJSDOMUrl('http://foo.com/', 'popstate');
 
       expect(stub).not.toHaveBeenCalled();
     });
@@ -317,8 +335,7 @@ describe('Router', () => {
         url: 'http://foo.com/bar',
       });
 
-      Router.getURL.mockImplementation(() => 'http://foo.com/');
-      await window.dispatchEvent(new Event('popstate'));
+      await updateJSDOMUrl('http://foo.com/', 'popstate');
 
       expect(stub).not.toHaveBeenCalled();
     });
@@ -343,8 +360,7 @@ describe('Router', () => {
         url: 'http://foo.com/bar',
       });
 
-      Router.getURL.mockImplementation(() => 'http://foo.com/');
-      window.dispatchEvent(new Event('popstate'));
+      updateJSDOMUrl('http://foo.com/', 'popstate');
 
       expect(stub).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -369,11 +385,11 @@ describe('RoutingState', () => {
       render() {
         return (
           <div id="inner">
-            <RoutingState>
+            <lib.RoutingState>
               {state => {
                 return JSON.stringify(state);
               }}
-            </RoutingState>
+            </lib.RoutingState>
           </div>
         );
       }
@@ -404,17 +420,17 @@ describe('RoutingState', () => {
       render() {
         return (
           <div id="inner">
-            <RoutingState>
+            <lib.RoutingState>
               {state => {
                 return JSON.stringify(state);
               }}
-            </RoutingState>
+            </lib.RoutingState>
           </div>
         );
       }
     }
 
-    const instance = render({
+    render({
       routes: [
         {
           path: '/foo(/:id)',
@@ -433,8 +449,70 @@ describe('RoutingState', () => {
       },
     });
 
-    Router.getURL.mockImplementation(() => 'http://foo.com/foo/bar');
-    window.dispatchEvent(new Event('popstate'));
+    updateJSDOMUrl('http://foo.com/foo/bar', 'popstate');
+
+    expect(JSON.parse(root.querySelector('#inner').innerHTML)).toMatchObject({
+      location: {
+        href: 'http://foo.com/foo/bar',
+        pathname: '/foo/bar',
+        query: {},
+      },
+      params: {
+        id: 'bar',
+      },
+    });
+  });
+});
+
+describe('useContext(RoutingContext)', () => {
+  function Foo() {
+    const state = useContext(lib.RoutingContext);
+
+    return <div id="inner">{JSON.stringify(state)}</div>;
+  }
+
+  it('inherits the routing state from the parent Router', () => {
+    render({
+      routes: [
+        {
+          path: '/foo',
+          render: () => Foo,
+        },
+      ],
+      url: 'http://foo.com/foo',
+    });
+
+    expect(JSON.parse(root.querySelector('#inner').innerHTML)).toMatchObject({
+      location: {
+        href: 'http://foo.com/foo',
+        params: {},
+        pathname: '/foo',
+        query: {},
+      },
+    });
+  });
+
+  it('reflects updates in routing state', () => {
+    render({
+      routes: [
+        {
+          path: '/foo(/:id)',
+          render: () => Foo,
+        },
+      ],
+      url: 'http://foo.com/foo',
+    });
+
+    expect(JSON.parse(root.querySelector('#inner').innerHTML)).toMatchObject({
+      location: {
+        href: 'http://foo.com/foo',
+        params: {},
+        pathname: '/foo',
+        query: {},
+      },
+    });
+
+    updateJSDOMUrl('http://foo.com/foo/bar', 'popstate');
 
     expect(JSON.parse(root.querySelector('#inner').innerHTML)).toMatchObject({
       location: {
@@ -460,7 +538,7 @@ describe('Link', () => {
       routes: [
         {
           path: '/foo',
-          render: () => <Link href="/bar">Baz</Link>,
+          render: () => <lib.Link href="/bar">Baz</lib.Link>,
         },
       ],
       url: 'http://foo.com/foo',
@@ -475,9 +553,9 @@ describe('Link', () => {
         {
           path: '/foo',
           render: () => (
-            <Link as="div" href="/bar">
+            <lib.Link as="div" href="/bar">
               Baz
-            </Link>
+            </lib.Link>
           ),
         },
       ],
@@ -492,7 +570,7 @@ describe('Link', () => {
       routes: [
         {
           path: '/foo',
-          render: () => <Link href="/foo">Baz</Link>,
+          render: () => <lib.Link href="/foo">Baz</lib.Link>,
         },
       ],
       url: 'http://foo.com/foo',
@@ -506,7 +584,7 @@ describe('Link', () => {
       routes: [
         {
           path: '/foo',
-          render: () => <Link href="/bar">Baz</Link>,
+          render: () => <lib.Link href="/bar">Baz</lib.Link>,
         },
         {
           path: '/bar',
@@ -516,70 +594,8 @@ describe('Link', () => {
       url: 'http://foo.com/foo',
     });
 
-    Simulate.click(root.querySelector('a'));
-
-    expect(history.pushState).toHaveBeenCalledWith({}, '', '/bar');
-  });
-
-  it('changes the routing state on touch end', () => {
-    render({
-      routes: [
-        {
-          path: '/foo',
-          render: () => <Link href="/bar">Baz</Link>,
-        },
-        {
-          path: '/bar',
-          render: () => 'It worked.',
-        },
-      ],
-      url: 'http://foo.com/foo',
-    });
-
-    Simulate.touchEnd(root.querySelector('a'));
-
-    expect(history.pushState).toHaveBeenCalledWith({}, '', '/bar');
-  });
-
-  it('changes the routing state on enter press', () => {
-    render({
-      routes: [
-        {
-          path: '/foo',
-          render: () => <Link href="/bar">Baz</Link>,
-        },
-        {
-          path: '/bar',
-          render: () => 'It worked.',
-        },
-      ],
-      url: 'http://foo.com/foo',
-    });
-
-    Simulate.keyDown(root.querySelector('a'), {
-      key: 'Enter',
-    });
-
-    expect(history.pushState).toHaveBeenCalledWith({}, '', '/bar');
-  });
-
-  it('changes the routing state on space press', () => {
-    render({
-      routes: [
-        {
-          path: '/foo',
-          render: () => <Link href="/bar">Baz</Link>,
-        },
-        {
-          path: '/bar',
-          render: () => 'It worked.',
-        },
-      ],
-      url: 'http://foo.com/foo',
-    });
-
-    Simulate.keyDown(root.querySelector('a'), {
-      key: 'Space',
+    act(() => {
+      Simulate.click(root.querySelector('a'));
     });
 
     expect(history.pushState).toHaveBeenCalledWith({}, '', '/bar');
@@ -590,7 +606,7 @@ describe('Link', () => {
       routes: [
         {
           path: '/foo',
-          render: () => <Link href="/bar">Baz</Link>,
+          render: () => <lib.Link href="/bar">Baz</lib.Link>,
         },
         {
           path: '/bar',
@@ -600,8 +616,10 @@ describe('Link', () => {
       url: 'http://foo.com/foo',
     });
 
-    Simulate.click(root.querySelector('a'), {
-      metaKey: true,
+    act(() => {
+      Simulate.click(root.querySelector('a'), {
+        metaKey: true,
+      });
     });
 
     expect(window.open).toHaveBeenCalledWith('/bar');
@@ -614,9 +632,9 @@ describe('Link', () => {
         {
           path: '/foo',
           render: () => (
-            <Link href="/bar" target="_blank">
+            <lib.Link href="/bar" target="_blank">
               Baz
-            </Link>
+            </lib.Link>
           ),
         },
         {
@@ -627,7 +645,9 @@ describe('Link', () => {
       url: 'http://foo.com/foo',
     });
 
-    Simulate.click(root.querySelector('a'));
+    act(() => {
+      Simulate.click(root.querySelector('a'));
+    });
 
     expect(window.open).toHaveBeenCalledWith('/bar');
     expect(history.pushState).not.toHaveBeenCalled();

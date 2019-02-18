@@ -1,13 +1,13 @@
 {
   "name": "buttermilk",
   "description": "Beautifully simple isomorphic routing for React projects.",
-  "version": "1.1.2",
+  "version": "2.0.0-alpha.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/probablyup/buttermilk"
   },
   "homepage": "https://buttermilk.js.org/",
-  "author": "Evan Scott (https://probablyup.com)",
+  "author": "Evan Jacobs (https://probablyup.com)",
   "main": "dist/cjs.js",
   "module": "dist/es.js",
   "files": [
@@ -16,28 +16,34 @@
   ],
   "scripts": {
     "build": "NODE_ENV=production rollup -c rollup.config.js",
+    "dev": "parcel example/index.html",
     "test": "jest",
     "size": "bundlesize",
     "prepublish": "npm run build"
   },
   "peerDependencies": {
     "prop-types": ">= 15",
-    "react": ">= 16.3"
+    "react": ">= 16.8",
+    "react-dom": ">= 16.8",
+    "react-is": ">= 16.8"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-jest": "^23.6.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
-    "bundlesize": "^0.17.0",
-    "codecov": "^3.1.0",
+    "bundlesize": "^0.17.1",
+    "codecov": "^3.2.0",
     "jest": "^23.6.0",
+    "jest-environment-jsdom": "^24.0.0",
+    "jest-environment-jsdom-global": "^1.1.1",
     "lodash": "^4.17.11",
-    "prop-types": "^15.6.2",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
+    "parcel-bundler": "^1.11.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.2",
+    "react-dom": "^16.8.2",
+    "react-is": "^16.8.2",
     "rollup": "^0.57.1",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^9.1.0",
@@ -50,7 +56,8 @@
     "lite-url": "^1.0.5"
   },
   "jest": {
-    "clearMocks": true
+    "clearMocks": true,
+    "testEnvironment": "jest-environment-jsdom-global"
   },
   "bundlesize": [
     {
