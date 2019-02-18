@@ -475,7 +475,7 @@ function MyComponent(props) {
 
 ### holistic example
 
-See it live: <https://codesandbox.io/s/20q311nn6n>
+See it live: <https://codesandbox.io/s/2xrr26y2lp>
 
 ```jsx
 /* Home.js */
@@ -565,8 +565,8 @@ Both the minified and development versions ship with source maps for ease of deb
 
 ## more examples
 
-- holistic example + animated route transitions: <https://codesandbox.io/s/30llnkwj5q>
-- using Buttermilk, React, etc from CDN: <https://codesandbox.io/s/p96j9159lq>
+- holistic example + animated route transitions: <https://codesandbox.io/s/vvr16kyqy7>
+- using Buttermilk, React, etc from CDN: <https://codesandbox.io/s/n3lq32ppxp>
 
 ## goals
 
