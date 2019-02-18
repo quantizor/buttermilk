@@ -31,6 +31,50 @@ Grab the `buttermilk` NPM module with your favorite package manager.
 npm i buttermilk
 ```
 
+## migrating from v1
+
+1. Upgrade all react dependencies (and buttermilk, of course):
+
+```
+npm i react@latest react-dom@latest react-is@latest buttermilk@latest
+```
+
+2. If you are dynamically-importing components for any routes, wrap the import in `React.lazy()` (note that this only works in the browser right now because [`React.Suspense` doesn't work server-side yet](https://reactjs.org/blog/2018/10/23/react-v-16-6.html#reactlazy-code-splitting-with-suspense).)
+
+✅
+
+```js
+routes: [
+  {
+    path: '/',
+    render: () => React.lazy(() => import('./Home')),
+  },
+  {
+    path: '*',
+    render: () => NotFound,
+  },
+];
+```
+
+⛔️
+
+```js
+routes: [
+  {
+    path: '/',
+    render: () => import('./Home').then(mdl => mdl.default),
+  },
+  {
+    path: '*',
+    render: () => NotFound,
+  },
+];
+```
+
+3. ??
+
+4. Profit!
+
 ## usage
 
 Setting up `buttermilk` involves placing a `<Router>` component on your page and feeding it an array of route definitions. If you learn better by reverse engineering, check out the [holistic example](#holistic-example).
@@ -412,6 +456,23 @@ Use this API to programmatically change the route browser-side. It uses `pushSta
 route('/some/other/url');
 ```
 
+### misc
+
+#### `RoutingContext`
+
+Used with the [`useContext` react hook](https://reactjs.org/docs/hooks-reference.html#usecontext) to get access to `routingState` in your functional components. Just an alternative to the `RoutingState` render prop component.
+
+```js
+import { RoutingContext } from 'buttermilk';
+import React, { useContext } from 'react';
+
+function MyComponent(props) {
+  const routing = useContext(RoutingContext);
+
+  return <div {...props}>The current path is: {routing.location.pathname}</div>;
+}
+```
+
 ### holistic example
 
 See it live: <https://codesandbox.io/s/20q311nn6n>
@@ -463,7 +524,7 @@ const NotFound = () => (
 const routes = [
   {
     path: '/',
-    render: () => import('./Home').then(mdl => mdl.default),
+    render: () => React.lazy(() => import('./Home')),
   },
   {
     path: '/blep/:animal',
@@ -498,7 +559,7 @@ https://unpkg.com/buttermilk@1.1.1/dist/standalone.js
 https://unpkg.com/buttermilk@1.1.1/dist/standalone.min.js
 ```
 
-The exports will be accessible at `window.Buttermilk`. Note that this requires `react >= 16.3` (`window.React`) and `prop-types` (`window.PropTypes`) to also be accessible in the `window` scope.
+The exports will be accessible at `window.Buttermilk`. Note that this requires `react >= 16.8` (`window.React`),`react-is >= 16.8` (`window.ReactIs`), and `prop-types` (`window.PropTypes`) to also be accessible in the `window` scope.
 
 Both the minified and development versions ship with source maps for ease of debugging.
 

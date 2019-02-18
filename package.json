@@ -1,7 +1,7 @@
 {
   "name": "buttermilk",
   "description": "Beautifully simple isomorphic routing for React projects.",
-  "version": "1.1.2",
+  "version": "2.0.0-alpha",
   "repository": {
     "type": "git",
     "url": "https://github.com/probablyup/buttermilk"
