@@ -268,7 +268,7 @@ describe('Router', () => {
       );
     });
 
-    fit('accepts a promise', async () => {
+    it('accepts a promise', async () => {
       const stub = jest.fn();
 
       render({
