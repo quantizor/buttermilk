@@ -113,3 +113,11 @@ it('handles multple splats', () => {
   expect(regex.test('/foo/blah/bar/fizz/baz.html')).toBe(true);
   expect(regex.test('/foo/bar/baz.html')).toBe(true);
 });
+
+it('handles trailing slashes', () => {
+  const test = '/foo';
+  const regex = regexify(test);
+
+  expect(regex.test('/foo')).toBe(true);
+  expect(regex.test('/foo/')).toBe(true);
+});

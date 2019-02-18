@@ -17,6 +17,6 @@ export default function regexify(path) {
       .replace(/\(([^)]+)\)/g, '(?:$1)?')
 
       // handle dynamic fragments: /:bar
-      .replace(/\/:[^/()#?]*/g, '/([^/]*)') + '$'
+      .replace(/\/:[^/()#?]*/g, '/([^/]*)') + '/?$'
   );
 }
