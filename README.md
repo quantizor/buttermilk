@@ -20,6 +20,8 @@
     - [without a bundler](#without-a-bundler)
   - [more examples](#more-examples)
   - [goals](#goals)
+  - [browser compatibility](#browser-compatibility)
+    - [internet explorer](#internet-explorer)
 
 <!-- /TOC -->
 
@@ -577,3 +579,13 @@ Both the minified and development versions ship with source maps for ease of deb
 - obvious API
 - small
 - SSR
+
+## browser compatibility
+
+### internet explorer
+
+Internet Explorer requires a polyfill to support the [Event](https://developer.mozilla.org/en-US/docs/Web/API/Event/Event) constructor.
+
+Note that [Babel](https://babeljs.io/) does not transpile/polyfill this for you, so bootstrapped setups such as those based on [Create React App](https://create-react-app.dev/) will still need to manually include a polyfill.
+
+Suggested: [events-polyfill](https://github.com/lifaon74/events-polyfill)
