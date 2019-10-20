@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "build": "NODE_ENV=production rollup -c rollup.config.js",
-    "dev": "parcel example/index.html",
+    "dev": "parcel example/index.html --out-dir public",
     "test": "jest",
     "size": "bundlesize",
     "prepublish": "npm run build"
