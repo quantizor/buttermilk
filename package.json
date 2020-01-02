@@ -16,7 +16,6 @@
   ],
   "scripts": {
     "build": "NODE_ENV=production rollup -c rollup.config.js",
-    "dev": "parcel example/index.html --out-dir public",
     "test": "jest",
     "size": "bundlesize",
     "prepublish": "npm run build"
@@ -39,7 +38,6 @@
     "jest-environment-jsdom": "^24.0.0",
     "jest-environment-jsdom-global": "^1.1.1",
     "lodash": "^4.17.11",
-    "parcel-bundler": "^1.11.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",

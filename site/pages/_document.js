@@ -34,10 +34,10 @@ export default class MyDocument extends Document {
           <meta property="og:image" content="https://buttermilk.js.org/favicon_retina.png" />
           <meta name="twitter:card" content="summary" />
           <meta name="twitter:creator" content="@probablyup" />
-          <link rel="shortcut icon" href="/static/favicon.png" />
+          <link rel="shortcut icon" href="/favicon.png" />
 
           <link href="https://fonts.googleapis.com/css?family=Karma:400,600,700|Overpass+Mono|Vibur" rel="stylesheet" />
-          <link href="/static/vendor/solarized-light.css" rel="stylesheet" />
+          <link href="/vendor/solarized-light.css" rel="stylesheet" />
 
           <meta name="google-site-verification" content="P3Pt81s1_rvAzz4ZOv9xzwP64sTYIjndr3HjgJavNPw" />
 
@@ -50,7 +50,7 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
 
-          <script src="/static/vendor/rainbow.min.js" />
+          <script src="/vendor/rainbow.min.js" />
           <script dangerouslySetInnerHTML={{ __html: Rainbow }} />
         </body>
       </html>
