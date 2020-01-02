@@ -9,9 +9,9 @@
     "polished": "^1.9.2",
     "rainbow-code": "^2.1.2",
     "raw-loader": "^0.5.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "styled-components": "^3.2.3"
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
+    "styled-components": "5.0.0-rc.3"
   },
   "scripts": {
     "copy:vendor": "mkdir -p static/vendor && cp -f node_modules/rainbow-code/dist/rainbow.min.js node_modules/rainbow-code/themes/css/solarized-light.css static/vendor",
@@ -20,7 +20,9 @@
     "prestart": "npm run copy:vendor",
     "start": "next"
   },
-  "devDependencies": {},
+  "resolutions": {
+    "webworker-threads": "^0.7.17"
+  },
   "babel": {
     "presets": [
       "next/babel"

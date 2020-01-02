@@ -1,13 +1,12 @@
 import { darken, rgba } from 'polished';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { injectGlobal } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 
 import App from '../components/App';
 
 const red = '#8a0000';
 
-injectGlobal`
+const GlobalStyles = createGlobalStyle`
   html {
     box-sizing: border-box;
     color: #333;
@@ -126,4 +125,9 @@ injectGlobal`
   }
 `;
 
-export default () => <App />;
+export default () => (
+  <>
+    <GlobalStyles />
+    <App />
+  </>
+);
