@@ -557,8 +557,8 @@ ReactDOM.render(<Router routes={routes} outerComponent={App} />, root);
 You can also use consume Buttermilk from a CDN like unpkg:
 
 ```
-https://unpkg.com/buttermilk@1.1.1/dist/standalone.js
-https://unpkg.com/buttermilk@1.1.1/dist/standalone.min.js
+https://unpkg.com/buttermilk@2.0.0/dist/standalone.js
+https://unpkg.com/buttermilk@2.0.0/dist/standalone.min.js
 ```
 
 The exports will be accessible at `window.Buttermilk`. Note that this requires `react >= 16.8` (`window.React`),`react-is >= 16.8` (`window.ReactIs`), and `prop-types` (`window.PropTypes`) to also be accessible in the `window` scope.
