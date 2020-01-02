@@ -5,8 +5,8 @@
   "dependencies": {
     "babel-plugin-styled-components": "^1.5.1",
     "markdown-to-jsx": "^6.5.2",
-    "next": "^6.0.3",
-    "polished": "^1.9.2",
+    "next": "^9.1.6",
+    "polished": "^3.4.2",
     "rainbow-code": "^2.1.2",
     "raw-loader": "^0.5.1",
     "react": "^16.8.0",
@@ -14,11 +14,11 @@
     "styled-components": "5.0.0-rc.3"
   },
   "scripts": {
-    "copy:vendor": "mkdir -p static/vendor && cp -f node_modules/rainbow-code/dist/rainbow.min.js node_modules/rainbow-code/themes/css/solarized-light.css static/vendor",
+    "copy:vendor": "mkdir -p public/vendor && cp -f node_modules/rainbow-code/dist/rainbow.min.js node_modules/rainbow-code/themes/css/solarized-light.css public/vendor",
     "prebuild": "npm run copy:vendor",
-    "build": "next build && next export -o public",
-    "prestart": "npm run copy:vendor",
-    "start": "next"
+    "build": "next build && next export",
+    "predev": "npm run copy:vendor",
+    "dev": "next"
   },
   "resolutions": {
     "webworker-threads": "^0.7.17"

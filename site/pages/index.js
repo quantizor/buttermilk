@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { darken, rgba } from 'polished';
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
@@ -127,6 +128,9 @@ const GlobalStyles = createGlobalStyle`
 
 export default () => (
   <>
+    <Head>
+      <title>Buttermilk | Beautifully simple routing for React projects</title>
+    </Head>
     <GlobalStyles />
     <App />
   </>
