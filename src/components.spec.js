@@ -145,7 +145,7 @@ describe('Router', () => {
 
     expect(root.innerHTML).toContain('bar');
 
-    updateJSDOMUrl('http://foo.com/bar', 'popstate');
+    act(() => updateJSDOMUrl('http://foo.com/bar', 'popstate'));
 
     expect(root.innerHTML).toContain('oh well');
   });
@@ -167,7 +167,7 @@ describe('Router', () => {
 
     expect(root.innerHTML).toContain('bar');
 
-    updateJSDOMUrl('http://foo.com/', 'hashchange');
+    act(() => updateJSDOMUrl('http://foo.com/', 'hashchange'));
 
     expect(root.innerHTML).toContain('oh well');
   });
@@ -251,7 +251,7 @@ describe('Router', () => {
         url: 'http://foo.com/bar',
       });
 
-      updateJSDOMUrl('http://foo.com/', 'popstate');
+      act(() => updateJSDOMUrl('http://foo.com', 'popstate'));
 
       expect(stub).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -287,7 +287,7 @@ describe('Router', () => {
         url: 'http://foo.com/bar',
       });
 
-      await updateJSDOMUrl('http://foo.com/', 'popstate');
+      await act(async () => await updateJSDOMUrl('http://foo.com', 'popstate'));
 
       expect(stub).toHaveBeenCalled();
     });
@@ -311,7 +311,7 @@ describe('Router', () => {
         url: 'http://foo.com/bar',
       });
 
-      updateJSDOMUrl('http://foo.com/', 'popstate');
+      act(() => updateJSDOMUrl('http://foo.com', 'popstate'));
 
       expect(stub).not.toHaveBeenCalled();
     });
@@ -335,7 +335,7 @@ describe('Router', () => {
         url: 'http://foo.com/bar',
       });
 
-      await updateJSDOMUrl('http://foo.com/', 'popstate');
+      await act(async () => await updateJSDOMUrl('http://foo.com', 'popstate'));
 
       expect(stub).not.toHaveBeenCalled();
     });
@@ -360,7 +360,7 @@ describe('Router', () => {
         url: 'http://foo.com/bar',
       });
 
-      updateJSDOMUrl('http://foo.com/', 'popstate');
+      act(() => updateJSDOMUrl('http://foo.com', 'popstate'));
 
       expect(stub).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -449,7 +449,7 @@ describe('RoutingState', () => {
       },
     });
 
-    updateJSDOMUrl('http://foo.com/foo/bar', 'popstate');
+    act(() => updateJSDOMUrl('http://foo.com/foo/bar', 'popstate'));
 
     expect(JSON.parse(root.querySelector('#inner').innerHTML)).toMatchObject({
       location: {
@@ -512,7 +512,7 @@ describe('useContext(RoutingContext)', () => {
       },
     });
 
-    updateJSDOMUrl('http://foo.com/foo/bar', 'popstate');
+    act(() => updateJSDOMUrl('http://foo.com/foo/bar', 'popstate'));
 
     expect(JSON.parse(root.querySelector('#inner').innerHTML)).toMatchObject({
       location: {
