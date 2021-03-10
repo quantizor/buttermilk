@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "babel-plugin-styled-components": "^1.5.1",
-    "markdown-to-jsx": "^6.5.2",
+    "markdown-to-jsx": "^6.11.4",
     "next": "^9.1.6",
     "polished": "^3.4.2",
     "rainbow-code": "^2.1.2",
