@@ -24,12 +24,12 @@ function generateConfig(overrides, minify = false, externalHelpers = false) {
           runtimeHelpers: externalHelpers,
           presets: [
             [
-              'env',
+              '@babel/preset-env',
               {
                 modules: false,
               },
             ],
-            'react',
+            '@babel/preset-react',
           ],
         }),
         commonjs({
