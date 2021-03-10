@@ -1,4 +1,4 @@
-import Document, { Head, Main, NextScript } from 'next/document';
+import Document, { Head, Html, Main, NextScript } from 'next/document';
 import React from 'react';
 import { ServerStyleSheet } from 'styled-components';
 
@@ -6,7 +6,7 @@ export default class MyDocument extends Document {
   static getInitialProps({ renderPage }) {
     const sheet = new ServerStyleSheet();
 
-    const page = renderPage(App => props => sheet.collectStyles(<App {...props} />));
+    const page = renderPage((App) => (props) => sheet.collectStyles(<App {...props} />));
 
     const styleTags = sheet.getStyleElement();
 
@@ -15,33 +15,10 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <html>
+      <Html>
         <Head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-          <meta name="theme-color" content="#8a0000" />
-          <meta
-            name="description"
-            content="The lightweight, dead-simple, hyper customizable alternative to React Router. Designed for both client and server-side routing."
-          />
-          <meta
-            name="keywords"
-            content="react router, javascript, client side router, server side router, routing library"
-          />
-          <meta name="og:title" content="Buttermilk, a React routing library" />
-          <meta name="og:description" content="Lightweight, simple, and works well both on the browser and server." />
-          <meta name="twitter:image" content="https://buttermilk.js.org/favicon_retina.png" />
-          <meta property="og:image" content="https://buttermilk.js.org/favicon_retina.png" />
-          <meta name="twitter:card" content="summary" />
-          <meta name="twitter:creator" content="@probablyup" />
-          <link rel="shortcut icon" href="/favicon.png" />
-
           <link href="https://fonts.googleapis.com/css?family=Karma:400,600,700|Overpass+Mono|Vibur" rel="stylesheet" />
           <link href="/vendor/solarized-light.css" rel="stylesheet" />
-
-          <meta name="google-site-verification" content="P3Pt81s1_rvAzz4ZOv9xzwP64sTYIjndr3HjgJavNPw" />
-
-          <script async src="https://www.googletagmanager.com/gtag/js?id=UA-91833843-2" />
           <script dangerouslySetInnerHTML={{ __html: GA }} />
           {this.props.styleTags}
         </Head>
@@ -53,7 +30,7 @@ export default class MyDocument extends Document {
           <script src="/vendor/rainbow.min.js" />
           <script dangerouslySetInnerHTML={{ __html: Rainbow }} />
         </body>
-      </html>
+      </Html>
     );
   }
 }

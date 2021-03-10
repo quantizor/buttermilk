@@ -16,9 +16,7 @@ class App extends Component {
           </Headline>
         </Header>
 
-        <Content>
-          {this.props.children}
-        </Content>
+        <Content>{this.props.children}</Content>
       </Container>
     );
   }
@@ -27,7 +25,7 @@ class App extends Component {
 const desktop = '@media all and (min-width: 768px)';
 
 const Container = styled.div`
-  background: #FAFAFA;
+  background: #fafafa;
   min-height: 100%;
 `;
 
@@ -75,8 +73,10 @@ const Content = styled.main`
   font-size: 1.6rem;
 `;
 
-export default () => (
-  <App>
-    <Home />
-  </App>
-);
+export default function ComposedApp() {
+  return (
+    <App>
+      <Home />
+    </App>
+  );
+}
