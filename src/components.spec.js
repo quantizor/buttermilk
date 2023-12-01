@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, lazy } from 'react';
 import ReactDOM from 'react-dom';
 import { act, Simulate } from 'react-dom/test-utils';
 import * as lib from './components';
@@ -31,6 +31,24 @@ describe('Router', () => {
         {
           path: '/foo',
           render: () => <div>bar</div>,
+        },
+        {
+          path: '*',
+          render: () => <div>oh well</div>,
+        },
+      ],
+      url: 'http://foo.com/foo',
+    });
+
+    expect(root.innerHTML).toContain('bar');
+  });
+
+  it('renders a lazy child', () => {
+    render({
+      routes: [
+        {
+          path: '/foo',
+          render: () => lazy(() => Promise.resolve({ default: <div>bar</div> })),
         },
         {
           path: '*',
