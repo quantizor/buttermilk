@@ -1,0 +1,73 @@
+{
+  "name": "buttermilk-react",
+  "version": "3.0.0-next.0",
+  "description": "React 19 bindings for buttermilk predicate-based routing.",
+  "keywords": [
+    "react",
+    "routing",
+    "router",
+    "react-19",
+    "predicate"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quantizor/buttermilk.git",
+    "directory": "packages/buttermilk-react"
+  },
+  "homepage": "https://buttermilk.js.org/",
+  "author": "Evan Jacobs (https://probablyup.com)",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "react-server": "./dist/index.mjs",
+      "browser": "./dist/index.browser.mjs",
+      "default": "./dist/index.mjs"
+    },
+    "./server": {
+      "types": "./dist/server.d.mts",
+      "default": "./dist/server.mjs"
+    }
+  },
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit"
+  },
+  "dependencies": {
+    "buttermilk": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.1.6",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^25.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "size-limit": "^11.1.6",
+    "tsdown": "^0.21.9",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
+}
