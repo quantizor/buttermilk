@@ -1,0 +1,240 @@
+# buttermilk
+
+> buttermilk is a predicate-based router for JavaScript. A route is `{ match, render }`, where `match` is a predicate returning `Params | null`. Predicates are typed and compose via `and`/`or`. The core is framework-agnostic; React 19 bindings are a separate package. A radix-tree compiler matches in sub-microsecond time; a linear `findRoute` oracle is also exported for strict first-match semantics.
+
+This file is a cheatsheet and best-practices guide for LLMs and tools assisting humans who are using buttermilk. If you only read one section, read "Route shape" and "When to use which matcher".
+
+## Packages
+
+- `buttermilk` — framework-agnostic core.
+- `buttermilk-react` — React 19 bindings. Peer-depends on `react@^19` and `react-dom@^19`.
+- `buttermilk-react/server` — RSC-safe helpers (React.cache-memoized).
+
+Both ship as ESM only. Node 20+.
+
+```sh
+npm i buttermilk                          # core only
+npm i buttermilk-react react react-dom    # React 19 bindings
+```
+
+## Route shape
+
+```ts
+import { path, and, or, query, guard, regex, predicate } from 'buttermilk';
+
+type Route = {
+  match: Predicate;                          // Params | null
+  render: (m: MatchResult) => unknown;       // framework-agnostic return
+  redirect?: string | ((m: MatchResult) => string);
+};
+```
+
+A predicate is a tagged union:
+
+- `path('/users/:id')` — path pattern. `:name` captures one non-empty segment. `*` matches exactly one segment (no capture). `**` matches remaining segments and must be last. Invalid patterns (e.g. `**` not final, duplicate param names) throw at call time with an explicit message.
+- `regex(/^\/files\/(?<year>\d{4})$/)` — RegExp against the pathname. Named capture groups become params.
+- `query('q')` — requires the given key in the query string. The matched value becomes a typed param.
+- `guard((req) => boolean)` — contributes no params; pure predicate gate.
+- `predicate<T>((req) => T | null)` — user-typed escape hatch. Pass the params type via the generic.
+- `and(a, b)` — both must match; param types intersect.
+- `or(a, b)` — first match wins; param types union.
+
+Aliases for terser hand-typing: `p` ≡ `path`, `custom` ≡ `predicate`. New code should prefer the long names.
+
+## Typed params (never widen)
+
+```ts
+import type { ParamsOf } from 'buttermilk';
+
+const pred = and(path('/users/:id'), query('tab'));
+type P = ParamsOf<typeof pred>;  // { id: string; tab: string }
+```
+
+`ParamsOf` flows through template-literal path inference, `and` (→ intersection), and `or` (→ union). Do not annotate route renders with `Record<string, string>` — let inference work.
+
+## When to use which matcher
+
+- `findRoute(routes, req)` — linear first-match. Use for small tables, for strict first-match semantics across opaque (`custom`) predicates, or as the correctness oracle in tests.
+- `compile(routes).find(req)` — radix-tree compiled router. Use for apps with many routes, or whenever match cost is measurable. Behavior matches `findRoute` for every URL the trie can handle; opaque predicates fall back to linear.
+
+```ts
+import { compile } from 'buttermilk';
+const router = compile(routes);
+const hit = router.find({ url: '/users/42' });
+if (hit) hit.route.render(hit.result);
+```
+
+A `RouteRequest` is `{ url: string; method?: string; headers?: Record<string, string> }`.
+
+## React 19 usage
+
+```tsx
+import { Router, Link, useParams, p } from 'buttermilk-react';
+
+function User() {
+  const { id } = useParams<{ id: string }>();
+  return <h1>user {id}</h1>;
+}
+
+const routes = [
+  { match: path('/'),          render: () => <Home /> },
+  { match: path('/users/:id'), render: () => <User /> },
+  { match: path('/**'),        render: () => <NotFound /> },
+];
+
+export default function App() {
+  return (
+    <Router routes={routes}>
+      <Link href="/users/42">go</Link>
+    </Router>
+  );
+}
+```
+
+Hooks are client-only. Calling any of them from a Server Component throws a teaching error that points at the file missing `'use client'`. All require a `<Router>` ancestor:
+
+- `useRoute()` → active `MatchResult | null`.
+- `useParams<P>()` → typed params. Throws if no route matched.
+- `useLocation()` → parsed `Location` (`pathname`, `search`, `hash`, lazy `query`).
+- `useNavigate()` → `(url: string) => void`.
+- `useRouter()` → `{ url, result, route, navigate }`.
+
+## React Server Components
+
+`<Router>` and `<Link>` are isomorphic — the same `buttermilk-react` import works from a Server Component or a Client Component. Under React's `react-server` condition the module swaps in stateless implementations at load time: `<Router>` matches synchronously from a required `url` prop and `<Link>` emits a plain `<a href>`. Hooks stay client-only and throw a teaching error if called from a Server Component.
+
+```tsx
+// app/layout.tsx — Server Component, no 'use client' needed.
+import { headers } from 'next/headers';
+import { Router, Link } from 'buttermilk-react';
+import { routes } from './routes';
+
+export default async function Layout() {
+  const url = (await headers()).get('x-url') ?? '/';
+  return (
+    <Router routes={routes} url={url}>
+      <nav><Link href="/users/42">go</Link></nav>
+    </Router>
+  );
+}
+```
+
+For match inspection without rendering — e.g. reading the matched route in a Server Component to set a data attribute — `buttermilk-react/server` exports `React.cache()`-wrapped helpers:
+
+```ts
+import { getRouteMatch, getPathname, getParams, getLocation } from 'buttermilk-react/server';
+```
+
+Every helper is wrapped in `React.cache()`, so repeated calls within a single render reuse work.
+
+## Browser-optimized bundle
+
+`buttermilk-react` ships a `browser`-condition entry (`dist/index.browser.mjs`) that drops RSC code paths entirely and is minified. Vite, webpack, and esbuild resolve it automatically when building for the browser. The isomorphic bundle remains under `default` and `react-server`. Nothing to configure at the app level — the correct entry is chosen by the resolver.
+
+## SSR and controlled navigation
+
+`<Router url="/users/42">` renders the given URL without touching browser history — use this for the initial server-rendered payload, then drop the prop on hydration so the client takes over history.
+
+## Best practices by scenario
+
+### Small table, simple paths (<20 routes)
+
+Use `findRoute`. Skip `compile`. The linear scan is fine and reads straightforwardly.
+
+### Medium-to-large table (~100–10 000 routes)
+
+Use `compile(routes)`. Share the compiled router per process; do not re-compile per request.
+
+### Auth gates
+
+Compose `guard` with a path:
+
+```ts
+{ match: and(path('/admin/**'), guard((r) => r.headers?.cookie?.includes('sid='))),
+  render: () => <Admin />,
+  redirect: '/login' }
+```
+
+`redirect` may be a string or `(match) => string`.
+
+### Query-driven routes
+
+`query('q')` requires the key to exist and captures its value as `params.q`. Combine with a path via `and`:
+
+```ts
+and(path('/search'), query('q'))
+```
+
+### One-off predicate (feature flag, cookie, A/B)
+
+`guard(req => bool)` if you contribute no params; `predicate<T>(req => T | null)` if you want typed data in `render`.
+
+```ts
+predicate<{ experiment: 'a' | 'b' }>((r) => {
+  const flag = r.headers?.cookie?.match(/exp=(\w+)/)?.[1];
+  return flag === 'a' || flag === 'b' ? { experiment: flag } : null;
+})
+```
+
+### RSC + client hybrid
+
+Match in a Server Component via `getRouteMatch(routes, url)` to branch layouts, then render a client-only `<Router>` only where interactivity is needed. Keep the route table in a file that both server and client import — matching is pure.
+
+## Things v3 does not do
+
+- No built-in scroll restoration. You own `scrollTo` calls in your render or via `useEffect` on `useLocation()`.
+- No data loading / action story. buttermilk only matches; use your data layer (RSC, React Query, Suspense + `use()`) inside the rendered component.
+- No nested-layout API distinct from JSX nesting. Layouts are just components that wrap children.
+- No CJS build. Modern bundlers and Node 20+ resolve ESM natively.
+
+## Differences from v2 (breaking)
+
+- `*` used to be loose; now matches exactly one segment. `**` is new and matches the remainder (must be last). `:param` no longer captures empty segments.
+- Route shape is `{ match, render }` instead of `{ path, render }`.
+- React bindings live in `buttermilk-react`, not `buttermilk`.
+- React 19 required. `prop-types`, `react-is`, `lite-url` removed.
+- CJS dropped.
+
+See https://buttermilk.js.org/migrating for the full guide.
+
+## API reference (short)
+
+```
+buttermilk
+  path(pattern)          // alias: p
+  regex(re)              // named groups become params
+  query(key)             // presence + value capture
+  guard(fn)              // no params
+  predicate<T>(fn)       // typed escape hatch; alias: custom
+  and(a, b)              // intersection
+  or(a, b)               // union
+  findRoute(routes, req)
+  compile(routes) -> { find(req) }
+  parseUrl(url)
+  matchPredicate(pred, req, loc)
+  matchRoute(route, req)
+
+  type Predicate, Route, RouteRequest, MatchResult, Location,
+       ExtractParams<S>, ParamsOf<P>, CompiledRouter
+
+buttermilk-react
+  <Router routes url? compiled?>
+  <Link href {...anchorProps}>
+  useRouter(), useRoute(), useParams<P>(), useLocation(), useNavigate()
+  (re-exports all of buttermilk above)
+
+buttermilk-react/server
+  getRouteMatch(routes, url)
+  getPathname(url)
+  getParams(routes, url)
+  getLocation(url)
+```
+
+## Canonical links
+
+- Docs: https://buttermilk.js.org/
+- Migration: https://buttermilk.js.org/migrating
+- Examples: https://buttermilk.js.org/examples
+- Repository: https://github.com/quantizor/buttermilk
+- npm: https://www.npmjs.com/package/buttermilk
+- npm (React bindings): https://www.npmjs.com/package/buttermilk-react

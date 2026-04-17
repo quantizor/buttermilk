@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#8a0000" />
+    <meta name="color-scheme" content="light dark" />
+
+    <title>buttermilk — predicate-based routing for JavaScript and React 19</title>
+    <meta
+      name="description"
+      content="buttermilk is a tiny, predicate-based router. Routes are { match, render }. Typed params survive composition, and a radix compiler matches in sub-microsecond time. React 19 bindings are optional and RSC-safe."
+    />
+    <meta
+      name="keywords"
+      content="router, routing, predicate, react, react 19, react server components, rsc, typed, typescript, radix tree, javascript"
+    />
+    <meta name="author" content="Evan Jacobs" />
+    <link rel="canonical" href="https://buttermilk.js.org/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="buttermilk" />
+    <meta property="og:url" content="https://buttermilk.js.org/" />
+    <meta property="og:title" content="buttermilk — predicate-based routing" />
+    <meta
+      property="og:description"
+      content="A route is a predicate plus a render function. Typed params survive composition. Framework-agnostic core; React 19 bindings separate."
+    />
+    <meta property="og:image" content="https://buttermilk.js.org/og.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="buttermilk — predicate-based routing" />
+    <meta
+      name="twitter:description"
+      content="Predicate-based routing for JavaScript. Typed params, sub-microsecond radix compiler, React 19 bindings."
+    />
+    <meta name="twitter:image" content="https://buttermilk.js.org/og.png" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Karma:wght@400;600;700&family=Overpass+Mono&family=Vibur&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="alternate" type="text/plain" title="LLM cheatsheet" href="/llms.txt" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "buttermilk",
+        "description": "Predicate-based routing for JavaScript, with typed params and a sub-microsecond radix compiler. Framework-agnostic core; optional React 19 bindings.",
+        "codeRepository": "https://github.com/quantizor/buttermilk",
+        "programmingLanguage": ["TypeScript", "JavaScript"],
+        "license": "https://opensource.org/licenses/MIT",
+        "author": {
+          "@type": "Person",
+          "name": "Evan Jacobs",
+          "url": "https://probablyup.com"
+        },
+        "url": "https://buttermilk.js.org/"
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <p style="padding: 2rem; font-family: sans-serif">
+        buttermilk is a JavaScript library. The docs site renders client-side;
+        enable JavaScript to read them, or browse the
+        <a href="https://github.com/quantizor/buttermilk">GitHub repository</a>
+        directly.
+      </p>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -26,13 +26,15 @@ A route is now `{ match: Predicate, render }` instead of `{ path, render }`:
 -   route('/', Home),
 -   route('*', NotFound),
 - ];
-+ import { p } from 'buttermilk';
++ import { path } from 'buttermilk';
 + const routes = [
-+   { match: p('/users/:id'), render: ({ params }) => <User id={params.id} /> },
-+   { match: p('/'),          render: () => <Home /> },
-+   { match: p('/**'),        render: () => <NotFound /> },
++   { match: path('/users/:id'), render: ({ params }) => <User id={params.id} /> },
++   { match: path('/'),          render: () => <Home /> },
++   { match: path('/**'),        render: () => <NotFound /> },
 + ];
 ```
+
+`p` is re-exported as a short alias for `path`. Use whichever reads best.
 
 The render function receives a `MatchResult` with typed `params` and a
 parsed `location`. No more `this.props.match`.
@@ -113,8 +115,14 @@ URL string. For React apps, `<Router>` does this for you.
 - `useNavigate()` — imperative navigation; equivalent to clicking a
   matching `<Link>`.
 
-All of the above are client-only. For Server Components, import from
-`buttermilk-react/server`:
+`<Router>` and `<Link>` are isomorphic — the same import works in a
+Server Component or a Client Component. Under React's `react-server`
+condition `<Router>` matches synchronously from a required `url` prop and
+`<Link>` renders a plain `<a href>`. Hooks remain client-only and throw a
+teaching error if called from a Server Component.
+
+For match inspection without rendering (setting data attributes, logging,
+etc.), import from `buttermilk-react/server`:
 
 ```ts
 import { getRouteMatch, getPathname, getParams } from 'buttermilk-react/server';

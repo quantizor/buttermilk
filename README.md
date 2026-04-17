@@ -8,19 +8,21 @@ check, a guard, an arbitrary `(req) → params | null`, or any
 `and` / `or` of those. TypeScript infers the params through composition.
 
 ```ts
-import { and, p, query, or } from 'buttermilk';
+import { and, or, path, query, guard } from 'buttermilk';
 
 const routes = [
-  { match: p('/'),                        render: () => <Home /> },
-  { match: p('/users/:id'),               render: ({ params }) => <User id={params.id} /> },
-  { match: and(p('/search'), query('q')), render: ({ params }) => <Search q={params.q} /> },
-  { match: or(p('/admin'), guard(isStaff)), render: () => <Admin /> },
-  { match: p('/**'),                      render: () => <NotFound /> },
+  { match: path('/'),                        render: () => <Home /> },
+  { match: path('/users/:id'),               render: ({ params }) => <User id={params.id} /> },
+  { match: and(path('/search'), query('q')), render: ({ params }) => <Search q={params.q} /> },
+  { match: or(path('/admin'), guard(isStaff)), render: () => <Admin /> },
+  { match: path('/**'),                      render: () => <NotFound /> },
 ];
 ```
 
-Params are typed end-to-end: `p('/users/:id')` gives you `{ id: string }`
+Params are typed end-to-end: `path('/users/:id')` gives you `{ id: string }`
 without any schema declaration, `and(a, b)` intersects, `or(a, b)` unions.
+`p` is a short alias for `path`; `predicate` is a short-alias-less equivalent
+of the legacy `custom`. Use whichever reads best.
 
 ## Install
 
@@ -50,7 +52,7 @@ this function returns params" — and types it.
 | `{ match, render }`           | path strings or file layouts      |
 | `and` / `or` compose          | middleware + predicates separate  |
 | Predicate → `params | null`   | boolean, no structured output     |
-| Core has zero React           | framework baked in                |
+| Vanilla core, React is opt-in | framework baked in                |
 
 ## Performance
 
@@ -74,7 +76,7 @@ Competitor methodology, measurement setup, and type-check scaling in
 
 ```tsx
 import { Router, Link, useParams } from 'buttermilk-react';
-import { p, and, query } from 'buttermilk-react'; // re-exported for convenience
+import { path, and, query } from 'buttermilk-react'; // re-exported for convenience
 
 function User() {
   const { id } = useParams<{ id: string }>();
@@ -82,9 +84,9 @@ function User() {
 }
 
 const routes = [
-  { match: p('/'),          render: () => <h1>home</h1> },
-  { match: p('/users/:id'), render: () => <User /> },
-  { match: p('/**'),        render: () => <h1>404</h1> },
+  { match: path('/'),          render: () => <h1>home</h1> },
+  { match: path('/users/:id'), render: () => <User /> },
+  { match: path('/**'),        render: () => <h1>404</h1> },
 ];
 
 export default function App() {
@@ -98,8 +100,32 @@ export default function App() {
 
 ### React Server Components
 
-The interactive `<Router>` / `<Link>` / hooks are `'use client'`. For RSC,
-import from `buttermilk-react/server` instead:
+`<Router>` and `<Link>` are isomorphic — the same import works from a
+Server or Client Component. Under React's `react-server` condition the
+module swaps in stateless implementations: `<Router>` matches synchronously
+from a required `url` prop and `<Link>` emits a plain `<a href>`. Hooks
+stay client-only and throw a teaching error if called from a Server
+Component.
+
+```tsx
+// app/layout.tsx — Server Component, no 'use client' needed
+import { headers } from 'next/headers';
+import { Router, Link } from 'buttermilk-react';
+import { routes } from './routes';
+
+export default async function Layout() {
+  const url = (await headers()).get('x-url') ?? '/';
+  return (
+    <Router routes={routes} url={url}>
+      <nav><Link href="/users/42">go</Link></nav>
+    </Router>
+  );
+}
+```
+
+For match inspection without rendering — e.g. setting a data attribute
+from the matched route in a Server Component — `buttermilk-react/server`
+exposes `React.cache()`-wrapped helpers:
 
 ```ts
 import { headers } from 'next/headers';
@@ -116,6 +142,16 @@ export default async function Layout({ children }) {
 
 Each helper is wrapped in `React.cache()`, so calling them from multiple
 Server Components in the same render reuses the computation.
+
+### Browser-optimized bundle
+
+`buttermilk-react` ships a `browser`-condition entry that drops the RSC
+code paths entirely: the `<Router>` / `<Link>` server variants and their
+teaching-error strings are dead-code-eliminated at build time, and the
+output is minified. Vite, webpack, and esbuild resolve it automatically
+when targeting the browser — there's nothing to configure. The full
+isomorphic bundle still resolves under `default` and `react-server` for
+SSR / RSC / Node.
 
 ## Upgrading from v2
 
