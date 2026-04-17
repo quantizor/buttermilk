@@ -1,0 +1,31 @@
+{
+  "name": "@buttermilk/bench",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Benchmark harness for buttermilk v3 (core matcher) and popular competitors.",
+  "scripts": {
+    "bench": "node --experimental-strip-types --no-warnings=ExperimentalWarning ./src/run.ts",
+    "baseline": "node --experimental-strip-types --no-warnings=ExperimentalWarning ./src/baseline.ts",
+    "phase3": "node --experimental-strip-types --no-warnings=ExperimentalWarning ./src/phase3.ts",
+    "phase4": "node --experimental-strip-types --no-warnings=ExperimentalWarning ./src/phase4.ts",
+    "competitors": "node --expose-gc --experimental-strip-types --no-warnings=ExperimentalWarning ./src/competitors.ts",
+    "isolated": "node --expose-gc --experimental-strip-types --no-warnings=ExperimentalWarning ./src/isolated.ts",
+    "types-bench": "node --experimental-strip-types --no-warnings=ExperimentalWarning ./src/types-bench.ts",
+    "report": "node --experimental-strip-types --no-warnings=ExperimentalWarning ./src/report.ts"
+  },
+  "dependencies": {
+    "buttermilk": "workspace:*",
+    "mitata": "^1.0.34",
+    "find-my-way": "^9.3.0",
+    "wouter": "^3.3.5",
+    "react-router": "^7.1.1",
+    "@tanstack/router-core": "^1.95.0",
+    "@tanstack/history": "^1.161.6",
+    "regexparam": "^3.0.0",
+    "lite-url": "^1.0.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

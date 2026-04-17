@@ -67,10 +67,16 @@ Deliberately different from v2 (document in MIGRATING.md):
 
 - `bench/baseline/v2/` is frozen. Do not edit it. Its numbers are the "before"
   anchor across every phase.
-- New perf-relevant work runs `pnpm --filter @buttermilk/bench phase<N>` and
-  appends to `bench/REPORT.md` before it merges.
-- When you change `compile.ts` or `match.ts`, compare `phase4` numbers
-  before/after in the PR body — p50 for each URL class at 1 000 routes.
+- Per-phase entry points (`phase3`, `phase4`) are for in-process measurement
+  of buttermilk itself. Use them when you change `compile.ts` or `match.ts`
+  and just need a quick before/after.
+- Cross-adapter comparisons **must** use `pnpm --filter @buttermilk/bench
+  isolated`: each adapter runs in a fresh Node subprocess with `--expose-gc`
+  so retained heap from a slow competitor can't skew the next. `react-router`
+  is opt-in behind `ALL=1` because it matches in the ms range.
+- When you change `compile.ts` or `match.ts`, compare `phase4` (or
+  `isolated`) numbers before/after in the PR body — p50 for each URL class
+  at 1 000 routes.
 
 ## PR descriptions and Changesets
 
