@@ -1,0 +1,9 @@
+[
+  {
+    "name": "buttermilk-react (ESM, tree-shaken)",
+    "path": "dist/index.mjs",
+    "limit": "3 kB",
+    "gzip": true,
+    "ignore": ["react", "react-dom", "buttermilk"]
+  }
+]

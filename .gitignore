@@ -61,3 +61,21 @@ typings/
 
 # built assets
 dist
+
+# pnpm / turbo / tsbuildinfo
+.pnpm-store/
+.turbo
+*.tsbuildinfo
+
+# vite / next
+.next/
+.vercel
+.vite
+.cache
+
+# bench artifacts
+bench/results/
+
+# Agent scratch space — private by default. Safelist individual files
+# with `!.claude/<path>` below if they'd help a code reviewer.
+.claude/

@@ -1,0 +1,54 @@
+{
+  "name": "buttermilk",
+  "version": "3.0.0-next.0",
+  "description": "Predicate-based routing for modern JavaScript — framework-agnostic core.",
+  "keywords": [
+    "routing",
+    "router",
+    "predicate",
+    "radix-tree",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quantizor/buttermilk.git",
+    "directory": "packages/buttermilk"
+  },
+  "homepage": "https://buttermilk.js.org/",
+  "author": "Evan Jacobs (https://probablyup.com)",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.1.6",
+    "expect-type": "^1.1.0",
+    "size-limit": "^11.1.6",
+    "tsdown": "^0.21.9",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
+}

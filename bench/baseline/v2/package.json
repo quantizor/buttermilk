@@ -1,0 +1,6 @@
+{
+  "name": "@buttermilk/bench-baseline-v2",
+  "private": true,
+  "type": "module",
+  "description": "Frozen snapshot of buttermilk v2.0.1 core matcher. Imports resolve via parent bench/node_modules."
+}
